@@ -35,6 +35,43 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
 
+## Deployment & CI/CD
+
+This repository includes two GitHub Actions workflows to help you deploy:
+
+- `.github/workflows/deploy-vercel.yml` — builds and deploys the site to Vercel on pushes to `main`. Configure these repository secrets in GitHub:
+	- `VERCEL_TOKEN` — your Vercel personal token
+	- `VERCEL_ORG_ID` — the Vercel organization id
+	- `VERCEL_PROJECT_ID` — the Vercel project id
+
+- `.github/workflows/deploy-docker.yml` — builds a Docker image and pushes it to GitHub Container Registry (GHCR) on pushes to `main`. The workflow uses the repository `GITHUB_TOKEN` to authenticate with GHCR.
+
+If you prefer Netlify, or a different host, I can add a separate workflow — tell me which provider you want.
+
+### Required environment variables (recommended)
+
+Set the following environment variables in your deployment environment or in a `.env` file (do NOT commit secrets to the repo):
+
+- `MONGODB_URI` — MongoDB connection string (if using MongoDB storage)
+- `MONGODB_DB` — optional DB name
+- `ADMIN_TOKEN` — token used by admin endpoints (fallback admin auth)
+- `BASIC_AUTH_USER` / `BASIC_AUTH_PASS` — optional HTTP Basic credentials for admin UI
+- `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS` — optional SMTP settings for email notifications
+- `EMAIL_FROM`, `EMAIL_TO` — optional email addresses used by the mailer
+
+### Docker (build and run locally)
+
+Build and run the production image locally:
+
+```bash
+docker build -t parlemen:latest .
+docker run -p 3000:3000 --env-file .env -e NODE_ENV=production parlemen:latest
+```
+
+The Dockerfile uses a multi-stage build and runs the app as a non-root `app` user.
+
+## Backend API (local development)
+
 ## Backend API (local development)
 
 The project includes simple App Router API endpoints to serve data and accept contact form submissions. The endpoints are added under `src/app/api` and are intended for local development / small deployments. Consider replacing file storage with a DB or email provider for production.

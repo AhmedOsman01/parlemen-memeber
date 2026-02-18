@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    ports:
+      - "3000:3000"
+    env_file: .env.local
+    restart: unless-stopped
+    # Optional: mount .next cache for faster rebuilds in some setups
+    # volumes:
+    #   - ./.next:/app/.next
+
+  dev:
+    image: node:18
+    working_dir: /app
+    volumes:
+      - ./:/app:cached
+      - /app/node_modules
+    ports:
+      - "3000:3000"
+    command: npm run dev
+    env_file: .env.local
