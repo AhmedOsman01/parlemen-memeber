@@ -51,11 +51,13 @@ export async function POST(req) {
 
     const ttl = Number(ttlSec) || Number(process.env.ADMIN_JWT_TTL_SEC) || 3600; // default 1h
     const expiresIn = `${ttl}s`;
-    const payload = { sub: creds.user, role: 'admin' };
+    const { randomUUID } = require('crypto');
+    const jti = randomUUID();
+    const payload = { sub: creds.user, role: 'admin', jti };
     const token = jwt.sign(payload, process.env.ADMIN_JWT_SECRET, { expiresIn });
     const expiresAt = new Date(Date.now() + ttl * 1000).toISOString();
-
-    // Set HttpOnly secure cookie for server-side auth. Cookie name: admin_jwt
+    // Generate a CSRF token and set both admin_jwt (HttpOnly) and admin_csrf (readable by JS)
+    const csrf = randomUUID();
     const res = NextResponse.json({ expiresAt });
     const isProd = process.env.NODE_ENV === 'production';
     res.cookies.set('admin_jwt', token, {
@@ -65,6 +67,27 @@ export async function POST(req) {
       path: '/',
       maxAge: ttl,
     });
+    // admin_csrf is intentionally NOT httpOnly so client-side can read it and send in headers
+    res.cookies.set('admin_csrf', csrf, {
+      httpOnly: false,
+      secure: isProd,
+      sameSite: 'lax',
+      path: '/',
+      maxAge: ttl,
+    });
+
+    // Optionally store active session in Redis (allowlist) if Redis configured
+    try {
+      const { getRedisClient } = require('@/lib/rateLimiter');
+      const client = await getRedisClient();
+      if (client) {
+        // store active:{jti} = 1 with ttl
+        await client.set(`active:${jti}`, '1', { EX: ttl });
+      }
+    } catch (e) {
+      // ignore redis errors
+    }
+
     return res;
   } catch (err) {
     console.error('/api/admin/token error', err);

@@ -25,5 +25,14 @@
     "subject": "smoke",
     "message": "Hello from test script",
     "createdAt": "2026-02-18T11:19:14.138Z"
+  },
+  {
+    "id": "mls5lrgk",
+    "name": "API Test",
+    "email": "apitest@example.com",
+    "phone": "",
+    "subject": "smoke",
+    "message": "Hello from test script",
+    "createdAt": "2026-02-18T14:55:05.540Z"
   }
 ]

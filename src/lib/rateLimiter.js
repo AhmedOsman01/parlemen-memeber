@@ -22,6 +22,9 @@ async function getRedisClient() {
   }
 }
 
+// Exported for other modules to reuse the Redis client (optional)
+export { getRedisClient };
+
 export async function consumeContactRate(ip) {
   const max = Number(process.env.CONTACT_RATE_LIMIT_MAX) || 5;
   const windowMs = Number(process.env.CONTACT_RATE_LIMIT_WINDOW_MS) || 60 * 60 * 1000;

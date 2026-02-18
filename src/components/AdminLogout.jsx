@@ -10,7 +10,10 @@ export default function AdminLogout() {
   async function logout() {
     setLoading(true);
     try {
-      await fetch('/api/admin/logout', { method: 'POST' });
+      // read CSRF cookie (admin_csrf) and send as header
+      const cookie = document.cookie.split(';').map(c => c.trim()).find(c => c.startsWith('admin_csrf='));
+      const csrf = cookie ? cookie.split('=')[1] : null;
+      await fetch('/api/admin/logout', { method: 'POST', headers: csrf ? { 'x-csrf': csrf } : {} });
     } catch (e) {
       // ignore
     }

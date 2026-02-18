@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { checkBasicAuthFromHeader } from "./basicAuth";
+import { getRedisClient } from "./rateLimiter";
 
 // Admin auth helper
 // Supports (in order):
@@ -28,7 +29,19 @@ export async function authorizeAdmin(req) {
         const jwt = require("jsonwebtoken");
         const payload = jwt.verify(token, process.env.ADMIN_JWT_SECRET);
         // consider any verified JWT as admin; optionally check payload.role
-        if (payload) return { ok: true, method: "jwt", payload };
+        if (payload) {
+          // check revocation using redis if available
+          try {
+            const client = await getRedisClient();
+            if (client && payload.jti) {
+              const revoked = await client.get(`revoked:${payload.jti}`);
+              if (revoked) return { ok: false };
+            }
+          } catch (e) {
+            // ignore redis errors and allow verification to proceed
+          }
+          return { ok: true, method: "jwt", payload };
+        }
       } catch (e) {
         // fall through to next check
       }
