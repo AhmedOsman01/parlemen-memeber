@@ -6,6 +6,8 @@ services:
     ports:
       - "3000:3000"
     env_file: .env.local
+    environment:
+      - REDIS_URL=redis://redis:6379
     restart: unless-stopped
     # Optional: mount .next cache for faster rebuilds in some setups
     # volumes:
@@ -21,3 +23,11 @@ services:
       - "3000:3000"
     command: npm run dev
     env_file: .env.local
+    depends_on:
+      - redis
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    restart: unless-stopped

@@ -30,8 +30,9 @@ export default async function ContactsAdminPage({ searchParams }) {
       },
     };
 
-    const authResult = await authorizeAdmin(fakeReq);
-    if (!authResult || !authResult.ok) {
+  const authResult = await authorizeAdmin(fakeReq);
+  const adminName = authResult && authResult.payload ? authResult.payload.sub : null;
+  if (!authResult || !authResult.ok) {
       // Last fallback: ADMIN_TOKEN via query param
       const token = searchParams?.token || null;
       if (!process.env.ADMIN_TOKEN) {
@@ -42,7 +43,7 @@ export default async function ContactsAdminPage({ searchParams }) {
           </div>
         );
       }
-      if (token !== process.env.ADMIN_TOKEN) {
+  if (token !== process.env.ADMIN_TOKEN) {
         return (
           <div className="p-8">
             <h1 className="text-2xl font-bold">Unauthorized</h1>
@@ -51,6 +52,8 @@ export default async function ContactsAdminPage({ searchParams }) {
         );
       }
     }
+    // attach adminName for rendering
+    var __adminName = adminName;
   }
 
   const page = Number(searchParams?.page || 1);
@@ -62,10 +65,17 @@ export default async function ContactsAdminPage({ searchParams }) {
   return (
     <div className="p-8">
       <h1 className="text-2xl font-bold">Contacts (admin)</h1>
-      <div className="mt-3">
-        <form method="post" action="/api/admin/logout">
-          <button type="submit" className="px-3 py-2 bg-red-600 text-white rounded">Logout</button>
-        </form>
+      <div className="mt-3 flex items-center gap-3">
+        {typeof __adminName !== 'undefined' && __adminName ? <div className="text-sm text-gray-700">Logged in as <strong>{__adminName}</strong></div> : null}
+        <div>
+          <form method="post" action="/api/admin/logout">
+            <button type="submit" className="px-3 py-2 bg-red-600 text-white rounded">Logout</button>
+          </form>
+        </div>
+        <div>
+          {/* Client-side logout button */}
+          <script dangerouslySetInnerHTML={{ __html: "(function(){})();" }} />
+        </div>
       </div>
       <p className="text-sm text-gray-600 mt-2">Total: {total}</p>
 
