@@ -1,0 +1,60 @@
+name: Integration tests (admin)
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  integration:
+    runs-on: ubuntu-latest
+    services:
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping || exit 1"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install deps
+        run: npm ci
+
+      - name: Build app
+        env:
+          REDIS_URL: redis://localhost:6379
+        run: npm run build
+
+      - name: Start server
+        env:
+          NODE_ENV: production
+          REDIS_URL: redis://localhost:6379
+          BASIC_AUTH_USER: ${{ secrets.INTEGRATION_BASIC_USER }}
+          BASIC_AUTH_PASS: ${{ secrets.INTEGRATION_BASIC_PASS }}
+          ADMIN_JWT_SECRET: ${{ secrets.INTEGRATION_JWT_SECRET }}
+        run: |
+          nohup npm run start &
+          # wait for server to be ready
+          for i in {1..30}; do
+            if curl -sSf http://localhost:3000/ >/dev/null; then break; fi
+            sleep 1
+          done
+
+      - name: Run admin integration test
+        env:
+          TEST_BASE_URL: http://localhost:3000
+          TEST_ADMIN_USER: ${{ secrets.INTEGRATION_BASIC_USER }}
+          TEST_ADMIN_PASS: ${{ secrets.INTEGRATION_BASIC_PASS }}
+        run: node ./scripts/test-admin-auth.js

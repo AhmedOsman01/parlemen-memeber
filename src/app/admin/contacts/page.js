@@ -2,6 +2,7 @@ import { listContacts } from '@/models/contactModel';
 import { headers, cookies } from 'next/headers';
 import { checkBasicAuthFromHeader } from '@/lib/basicAuth';
 import { authorizeAdmin } from '@/lib/adminAuth';
+import AdminLogout from '@/components/AdminLogout';
 
 export const dynamic = 'force-dynamic';
 
@@ -68,13 +69,7 @@ export default async function ContactsAdminPage({ searchParams }) {
       <div className="mt-3 flex items-center gap-3">
         {typeof __adminName !== 'undefined' && __adminName ? <div className="text-sm text-gray-700">Logged in as <strong>{__adminName}</strong></div> : null}
         <div>
-          <form method="post" action="/api/admin/logout">
-            <button type="submit" className="px-3 py-2 bg-red-600 text-white rounded">Logout</button>
-          </form>
-        </div>
-        <div>
-          {/* Client-side logout button */}
-          <script dangerouslySetInnerHTML={{ __html: "(function(){})();" }} />
+          <AdminLogout />
         </div>
       </div>
       <p className="text-sm text-gray-600 mt-2">Total: {total}</p>
