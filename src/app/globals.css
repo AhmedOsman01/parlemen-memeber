@@ -1,0 +1,182 @@
+@import "tailwindcss";
+
+/* ===================================================================
+   الأنماط العامة — الموقع الرسمي لعضو مجلس النواب المصري
+   نظام الألوان: كحلي (#1a2744)، ذهبي (#c9a84c)، كريمي (#f5f0e8)
+   اتجاه: RTL (من اليمين إلى اليسار)
+   =================================================================== */
+
+/* ---------- متغيرات CSS ---------- */
+:root {
+  --navy: #1a2744;
+  --navy-light: #243352;
+  --navy-dark: #111b30;
+  --gold: #c9a84c;
+  --gold-light: #ddc06e;
+  --gold-dark: #a88a3a;
+  --cream: #f5f0e8;
+  --cream-light: #faf8f4;
+  --white: #ffffff;
+  --gray-100: #f3f4f6;
+  --gray-200: #e5e7eb;
+  --gray-300: #d1d5db;
+  --gray-400: #9ca3af;
+  --gray-500: #6b7280;
+  --gray-600: #4b5563;
+  --gray-700: #374151;
+  --gray-800: #1f2937;
+  --text-primary: #1a2744;
+  --text-secondary: #4b5563;
+}
+
+/* ---------- إعادة تعيين أساسية ---------- */
+html {
+  scroll-behavior: smooth;
+  direction: rtl;
+}
+
+body {
+  font-family: "Noto Kufi Arabic", "Noto Naskh Arabic", ui-sans-serif, system-ui, sans-serif;
+  color: var(--text-primary);
+  background-color: var(--cream-light);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Noto Kufi Arabic", ui-serif, Georgia, serif;
+}
+
+/* ---------- تخصيص Swiper ---------- */
+.swiper-pagination-bullet {
+  background: var(--gold) !important;
+  opacity: 0.5;
+  width: 12px !important;
+  height: 12px !important;
+}
+.swiper-pagination-bullet-active {
+  opacity: 1 !important;
+  transform: scale(1.2);
+}
+.swiper-button-next,
+.swiper-button-prev {
+  color: var(--gold) !important;
+}
+.swiper-button-next::after,
+.swiper-button-prev::after {
+  font-size: 24px !important;
+  font-weight: bold;
+}
+/* RTL: عكس أزرار Swiper */
+.swiper-rtl .swiper-button-next {
+  left: 10px;
+  right: auto;
+}
+.swiper-rtl .swiper-button-prev {
+  right: 10px;
+  left: auto;
+}
+
+/* ---------- حركات الأنيميشن ---------- */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+.animate-fade-in-up {
+  animation: fadeInUp 0.7s ease-out forwards;
+}
+.animate-fade-in {
+  animation: fadeIn 0.6s ease-out forwards;
+}
+.animate-slide-in-left {
+  animation: slideInLeft 0.7s ease-out forwards;
+}
+.animate-slide-in-right {
+  animation: slideInRight 0.7s ease-out forwards;
+}
+
+/* تأخير متدرج */
+.delay-100 { animation-delay: 0.1s; }
+.delay-200 { animation-delay: 0.2s; }
+.delay-300 { animation-delay: 0.3s; }
+.delay-400 { animation-delay: 0.4s; }
+
+/* ---------- زخرفة الخط الذهبي ---------- */
+.gold-underline::after {
+  content: "";
+  display: block;
+  width: 60px;
+  height: 3px;
+  background: var(--gold);
+  margin: 12px auto 0;
+  border-radius: 2px;
+}
+.gold-underline-right::after {
+  content: "";
+  display: block;
+  width: 60px;
+  height: 3px;
+  background: var(--gold);
+  margin: 12px 0 0;
+  margin-right: 0;
+  border-radius: 2px;
+}
+
+/* ---------- تأثير الزجاج ---------- */
+.glass {
+  background: rgba(26, 39, 68, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+/* ---------- تأثير البطاقة عند التمرير ---------- */
+.card-hover {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.card-hover:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 40px rgba(26, 39, 68, 0.12);
+}
+
+/* ---------- شريط التمرير المخصص ---------- */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--cream);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--gold);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--gold-dark);
+}
