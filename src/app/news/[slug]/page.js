@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from 'next/image';
 import { newsArticles } from "@/data/news";
 import { notFound } from "next/navigation";
 
@@ -44,12 +45,8 @@ export default async function NewsArticlePage({ params }) {
     <>
       {/* صورة البطل */}
       <section className="relative pt-24 pb-0">
-        <div className="aspect-[21/9] max-h-[480px] w-full overflow-hidden">
-          <img
-            src={article.image}
-            alt={article.title}
-            className="w-full h-full object-cover"
-          />
+        <div className="aspect-[21/9] max-h-[480px] w-full overflow-hidden relative">
+          <Image src={article.image} alt={article.title} fill className="w-full h-full object-cover" sizes="100vw" />
           <div className="absolute inset-0 bg-gradient-to-t from-[var(--cream-light)] via-transparent to-[var(--navy)]/30" />
         </div>
       </section>

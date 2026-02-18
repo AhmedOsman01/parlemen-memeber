@@ -1,4 +1,5 @@
 import Timeline from "@/components/Timeline";
+import Image from 'next/image';
 import SectionHeading from "@/components/SectionHeading";
 import { timelineData } from "@/data/timeline";
 import Link from "next/link";
@@ -38,11 +39,13 @@ export default function AboutPage() {
             {/* الصورة — عمودين */}
             <div className="lg:col-span-2">
               <div className="sticky top-28">
-                <div className="aspect-[3/4] rounded-2xl overflow-hidden shadow-2xl">
-                  <img
+                <div className="aspect-[3/4] rounded-2xl overflow-hidden shadow-2xl relative">
+                  <Image
                     src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=800&q=80"
                     alt="أحمد المصري — الصورة الرسمية"
+                    fill
                     className="w-full h-full object-cover"
+                    sizes="(max-width: 640px) 100vw, 33vw"
                   />
                 </div>
                 {/* بطاقة معلومات سريعة */}

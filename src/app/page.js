@@ -2,6 +2,7 @@ import HeroSlider from "@/components/HeroSlider";
 import SectionHeading from "@/components/SectionHeading";
 import NewsCard from "@/components/NewsCard";
 import Link from "next/link";
+import Image from 'next/image';
 import { newsArticles } from "@/data/news";
 
 /**
@@ -21,12 +22,13 @@ export default function HomePage() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
             {/* الصورة */}
             <div className="relative order-2 lg:order-1">
-              <div className="aspect-[4/5] rounded-2xl overflow-hidden shadow-2xl">
-                <img
+                <div className="aspect-[4/5] rounded-2xl overflow-hidden shadow-2xl relative">
+                <Image
                   src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=800&q=80"
                   alt="أحمد المصري — عضو مجلس النواب"
+                  fill
                   className="w-full h-full object-cover"
-                  loading="lazy"
+                  sizes="(max-width: 640px) 100vw, 50vw"
                 />
               </div>
               {/* عنصر زخرفي */}

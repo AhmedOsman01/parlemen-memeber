@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from 'next/image';
 
 /**
  * بطاقة الأخبار — مكون بطاقة لصفحة الأخبار
@@ -16,11 +17,12 @@ export default function NewsCard({ article }) {
       <article className="bg-white rounded-2xl overflow-hidden shadow-md card-hover h-full flex flex-col">
         {/* الصورة */}
         <div className="relative overflow-hidden aspect-[16/10]">
-          <img
+          <Image
             src={article.image}
             alt={article.title}
-            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-            loading="lazy"
+            fill
+            className="object-cover transition-transform duration-500 group-hover:scale-110"
+            sizes="(max-width: 640px) 100vw, 33vw"
           />
           {/* شارة التاريخ */}
           <span className="absolute top-4 right-4 px-3 py-1 bg-[var(--gold)] text-[var(--navy)] text-xs font-semibold rounded-full shadow-md">
