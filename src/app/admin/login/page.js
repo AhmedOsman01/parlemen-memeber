@@ -26,9 +26,8 @@ export default function AdminLoginPage() {
         setLoading(false);
         return;
       }
-      // store token and redirect to admin contacts
-      try { localStorage.setItem('ADMIN_JWT', data.token); } catch (e) {}
-      router.push('/admin/contacts');
+  // server sets cookie; just redirect to admin contacts
+  router.push('/admin/contacts');
     } catch (e) {
       setError('Network error');
     } finally {

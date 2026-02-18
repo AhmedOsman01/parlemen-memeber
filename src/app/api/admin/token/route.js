@@ -54,7 +54,18 @@ export async function POST(req) {
     const payload = { sub: creds.user, role: 'admin' };
     const token = jwt.sign(payload, process.env.ADMIN_JWT_SECRET, { expiresIn });
     const expiresAt = new Date(Date.now() + ttl * 1000).toISOString();
-    return NextResponse.json({ token, expiresAt });
+
+    // Set HttpOnly secure cookie for server-side auth. Cookie name: admin_jwt
+    const res = NextResponse.json({ expiresAt });
+    const isProd = process.env.NODE_ENV === 'production';
+    res.cookies.set('admin_jwt', token, {
+      httpOnly: true,
+      secure: isProd,
+      sameSite: 'lax',
+      path: '/',
+      maxAge: ttl,
+    });
+    return res;
   } catch (err) {
     console.error('/api/admin/token error', err);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
