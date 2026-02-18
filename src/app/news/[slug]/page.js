@@ -47,17 +47,17 @@ export default async function NewsArticlePage({ params }) {
       <section className="relative pt-24 pb-0">
         <div className="aspect-[21/9] max-h-[480px] w-full overflow-hidden relative">
           <Image src={article.image} alt={article.title} fill className="w-full h-full object-cover" sizes="100vw" />
-          <div className="absolute inset-0 bg-gradient-to-t from-[var(--cream-light)] via-transparent to-[var(--navy)]/30" />
+          <div className="absolute inset-0 bg-gradient-to-t from-(--cream-light) via-transparent to-(--navy)/30" />
         </div>
       </section>
 
       {/* محتوى المقال */}
-      <section className="py-12 lg:py-16 bg-[var(--cream-light)]">
+  <section className="py-12 lg:py-16 bg-(--cream-light)">
         <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
           {/* رابط العودة */}
           <Link
             href="/news"
-            className="inline-flex items-center gap-2 text-sm text-[var(--gold-dark)] font-medium mb-8 hover:gap-3 transition-all duration-300"
+            className="inline-flex items-center gap-2 text-sm text-(--gold-dark) font-medium mb-8 hover:gap-3 transition-all duration-300"
           >
             <svg className="w-4 h-4 rtl:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16l-4-4m0 0l4-4m-4 4h18" />
@@ -66,33 +66,33 @@ export default async function NewsArticlePage({ params }) {
           </Link>
 
           {/* التاريخ */}
-          <span className="inline-block px-3 py-1 bg-[var(--gold)]/15 text-[var(--gold-dark)] text-xs font-semibold rounded-full mb-4">
+          <span className="inline-block px-3 py-1 bg-(--gold)/15 text-(--gold-dark) text-xs font-semibold rounded-full mb-4">
             {formattedDate}
           </span>
 
           {/* العنوان */}
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-[var(--navy)] mb-8 leading-tight">
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-(--navy) mb-8 leading-tight">
             {article.title}
           </h1>
 
           {/* النص */}
           <div
-            className="prose prose-lg max-w-none text-[var(--text-secondary)] leading-relaxed
+            className="prose prose-lg max-w-none text-(--text-secondary) leading-relaxed
               [&_p]:mb-6
               [&_p:first-child]:text-xl
-              [&_p:first-child]:text-[var(--navy)]
+              [&_p:first-child]:text-(--navy)
               [&_p:first-child]:font-medium"
             dangerouslySetInnerHTML={{ __html: article.body }}
           />
 
           {/* مشاركة / إجراء */}
           <div className="mt-12 pt-8 border-t border-gray-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-            <p className="text-sm text-[var(--text-secondary)]">
+            <p className="text-sm text-(--text-secondary)">
               شارك هذا المقال مع مجتمعك.
             </p>
             <Link
               href="/contact"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[var(--gold)] text-[var(--navy)] text-sm font-semibold transition-all duration-300 hover:bg-[var(--gold-light)] hover:shadow-lg"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-(--gold) text-(--navy) text-sm font-semibold transition-all duration-300 hover:bg-(--gold-light) hover:shadow-lg"
             >
               تواصل مع النائب
             </Link>

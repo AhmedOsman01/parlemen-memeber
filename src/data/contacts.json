@@ -1,0 +1,11 @@
+[
+  {
+    "id": "mlrwvmmx",
+    "name": "API Test",
+    "email": "apitest@example.com",
+    "phone": "",
+    "subject": "smoke",
+    "message": "Hello from test script",
+    "createdAt": "2026-02-18T10:50:49.306Z"
+  }
+]

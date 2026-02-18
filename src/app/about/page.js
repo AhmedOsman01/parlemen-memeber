@@ -20,7 +20,7 @@ export default function AboutPage() {
   return (
     <>
       {/* رأس الصفحة */}
-      <section className="relative pt-32 pb-16 bg-[var(--navy)]">
+  <section className="relative pt-32 pb-16 bg-(--navy)">
         <div className="absolute inset-0 opacity-10" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1529107386315-e1a2ed48a620?w=1920&q=40')", backgroundSize: "cover", backgroundPosition: "center" }} />
         <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-4xl sm:text-5xl font-bold text-white mb-4">
@@ -33,13 +33,13 @@ export default function AboutPage() {
       </section>
 
       {/* ==================== السيرة الذاتية ==================== */}
-      <section className="py-20 lg:py-28 bg-[var(--cream-light)]">
+  <section className="py-20 lg:py-28 bg-(--cream-light)">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-5 gap-12 lg:gap-16 items-start">
             {/* الصورة — عمودين */}
             <div className="lg:col-span-2">
               <div className="sticky top-28">
-                <div className="aspect-[3/4] rounded-2xl overflow-hidden shadow-2xl relative">
+                <div className="aspect-3/4 rounded-2xl overflow-hidden shadow-2xl relative">
                   <Image
                     src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=800&q=80"
                     alt="أحمد المصري — الصورة الرسمية"
@@ -50,12 +50,12 @@ export default function AboutPage() {
                 </div>
                 {/* بطاقة معلومات سريعة */}
                 <div className="mt-6 bg-white rounded-xl p-6 shadow-md border border-gray-100">
-                  <h3 className="text-sm font-semibold tracking-wider text-[var(--gold-dark)] mb-4">
+                  <h3 className="text-sm font-semibold tracking-wider text-(--gold-dark) mb-4">
                     معلومات سريعة
                   </h3>
-                  <ul className="space-y-3 text-sm text-[var(--text-secondary)]">
+                  <ul className="space-y-3 text-sm text-(--text-secondary)">
                     <li className="flex justify-between">
-                      <span className="font-medium text-[var(--navy)]">المنصب</span>
+                      <span className="font-medium text-(--navy)">المنصب</span>
                       <span>عضو مجلس النواب</span>
                     </li>
                     <li className="flex justify-between">
@@ -81,13 +81,13 @@ export default function AboutPage() {
 
             {/* نص السيرة — ثلاثة أعمدة */}
             <div className="lg:col-span-3">
-              <span className="inline-block px-4 py-1.5 bg-[var(--gold)]/15 text-[var(--gold-dark)] text-xs font-semibold tracking-wider rounded-full mb-4">
+              <span className="inline-block px-4 py-1.5 bg-(--gold)/15 text-(--gold-dark) text-xs font-semibold tracking-wider rounded-full mb-4">
                 السيرة الذاتية
               </span>
-              <h2 className="text-3xl font-bold text-[var(--navy)] mb-6 gold-underline-right">
+              <h2 className="text-3xl font-bold text-(--navy) mb-6 gold-underline-right">
                 رحلة هدف وخدمة
               </h2>
-              <div className="space-y-4 text-[var(--text-secondary)] leading-relaxed">
+              <div className="space-y-4 text-(--text-secondary) leading-relaxed">
                 <p>
                   وُلد أحمد المصري ونشأ في القاهرة، حيث تطور لديه شغف مبكر بالخدمة
                   العامة والمشاركة المدنية. منذ أيامه الجامعية في جامعة القاهرة، حيث
@@ -122,13 +122,13 @@ export default function AboutPage() {
       </section>
 
       {/* ==================== الرؤية والرسالة ==================== */}
-      <section className="py-20 bg-[var(--navy)]">
+  <section className="py-20 bg-(--navy)">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
             {/* الرؤية */}
             <div className="bg-white/5 rounded-2xl p-8 border border-white/10">
-              <div className="w-12 h-12 rounded-xl bg-[var(--gold)]/20 flex items-center justify-center mb-6">
-                <svg className="w-6 h-6 text-[var(--gold)]" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <div className="w-12 h-12 rounded-xl bg-(--gold)/20 flex items-center justify-center mb-6">
+                <svg className="w-6 h-6 text-(--gold)" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                 </svg>
@@ -143,8 +143,8 @@ export default function AboutPage() {
 
             {/* الرسالة */}
             <div className="bg-white/5 rounded-2xl p-8 border border-white/10">
-              <div className="w-12 h-12 rounded-xl bg-[var(--gold)]/20 flex items-center justify-center mb-6">
-                <svg className="w-6 h-6 text-[var(--gold)]" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <div className="w-12 h-12 rounded-xl bg-(--gold)/20 flex items-center justify-center mb-6">
+                <svg className="w-6 h-6 text-(--gold)" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
                 </svg>
               </div>
@@ -160,7 +160,7 @@ export default function AboutPage() {
       </section>
 
       {/* ==================== المسيرة المهنية ==================== */}
-      <section className="py-20 lg:py-28 bg-[var(--cream-light)]">
+  <section className="py-20 lg:py-28 bg-(--cream-light)">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionHeading
             title="المسيرة المهنية"
@@ -171,17 +171,17 @@ export default function AboutPage() {
       </section>
 
       {/* شريط الإجراء */}
-      <section className="py-16 bg-gradient-to-r from-[var(--gold-dark)] to-[var(--gold)]">
+  <section className="py-16 bg-gradient-to-r from-(--gold-dark) to-(--gold)">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-2xl sm:text-3xl font-bold text-[var(--navy)] mb-4">
+          <h2 className="text-2xl sm:text-3xl font-bold text-(--navy) mb-4">
             هل ترغب في التواصل؟
           </h2>
-          <p className="text-[var(--navy)]/70 mb-6">
+          <p className="text-(--navy)/70 mb-6">
             لديك أسئلة أو أفكار أو ترغب في التواصل؟ تواصل معنا مباشرة.
           </p>
           <Link
             href="/contact"
-            className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full bg-[var(--navy)] text-white font-semibold text-sm transition-all duration-300 hover:bg-[var(--navy-light)] hover:shadow-xl hover:scale-105"
+            className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full bg-(--navy) text-white font-semibold text-sm transition-all duration-300 hover:bg-(--navy-light) hover:shadow-xl hover:scale-105"
           >
             تواصل معنا
             <svg className="w-4 h-4 rtl:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">

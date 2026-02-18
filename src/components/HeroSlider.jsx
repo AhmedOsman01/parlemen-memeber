@@ -37,7 +37,7 @@ export default function HeroSlider() {
                 className="absolute inset-0 bg-cover bg-center"
                 style={{ backgroundImage: `url(${slide.image})` }}
               >
-                <div className="absolute inset-0 bg-gradient-to-t from-[var(--navy-dark)] via-[var(--navy)]/60 to-[var(--navy)]/30" />
+                <div className="absolute inset-0 bg-gradient-to-t from-(--navy-dark) via-(--navy)/60 to-(--navy)/30" />
               </div>
 
               {/* محتوى الشريحة */}
@@ -45,7 +45,7 @@ export default function HeroSlider() {
                 <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full">
                   <div className="max-w-2xl">
                     {/* خط ذهبي زخرفي */}
-                    <div className="w-16 h-1 bg-[var(--gold)] mb-6 rounded-full" />
+                    <div className="w-16 h-1 bg-(--gold) mb-6 rounded-full" />
 
                     <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight mb-6">
                       {slide.title}
@@ -57,7 +57,7 @@ export default function HeroSlider() {
                     {/* زر الإجراء */}
                     <Link
                       href={slide.cta.href}
-                      className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full bg-[var(--gold)] text-[var(--navy)] font-semibold text-base transition-all duration-300 hover:bg-[var(--gold-light)] hover:shadow-xl hover:shadow-[var(--gold)]/30 hover:scale-105"
+                      className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full bg-(--gold) text-(--navy) font-semibold text-base transition-all duration-300 hover:bg-(--gold-light) hover:shadow-xl hover:shadow-(--gold)/30 hover:scale-105"
                     >
                       {slide.cta.label}
                       <svg className="w-5 h-5 rtl:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -74,7 +74,7 @@ export default function HeroSlider() {
 
       {/* مؤشر التمرير */}
       <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 animate-bounce">
-        <svg className="w-6 h-6 text-[var(--gold)]" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+        <svg className="w-6 h-6 text-(--gold)" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
         </svg>
       </div>
