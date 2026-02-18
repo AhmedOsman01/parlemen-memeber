@@ -8,12 +8,11 @@ import path from "path";
 import { createContactRecord, listContacts } from "@/models/contactModel";
 import { sendContactNotification } from "@/lib/mailer";
 import { sanitizeContactPayload } from "@/lib/sanitize";
-import { checkBasicAuthFromHeader } from "@/lib/basicAuth";
+import { authorizeAdmin } from "@/lib/adminAuth";
+import { consumeContactRate } from "@/lib/rateLimiter";
 
-// Basic in-memory rate limiter: map ip -> { count, resetAt }
-const RATE_LIMIT_MAX = Number(process.env.CONTACT_RATE_LIMIT_MAX) || 5;
-const RATE_LIMIT_WINDOW_MS = Number(process.env.CONTACT_RATE_LIMIT_WINDOW_MS) || 60 * 60 * 1000; // 1 hour
-const rateMap = global._contactRateMap || (global._contactRateMap = new Map());
+// Rate limiting is handled by `src/lib/rateLimiter.js` which will use Redis if configured,
+// otherwise it falls back to a simple in-memory limiter (not suitable for multi-instance prod).
 
 const CONTACTS_PATH = path.join(process.cwd(), "src", "data", "contacts.json");
 
@@ -46,15 +45,10 @@ async function writeContacts(contacts) {
 export async function POST(req) {
   try {
     const body = await req.json();
-    // Rate limit by IP
+    // Rate limit by IP (Redis-backed when configured)
     const ip = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || req.ip || 'local';
-    const now = Date.now();
-    const state = rateMap.get(ip) || { count: 0, resetAt: now + RATE_LIMIT_WINDOW_MS };
-    if (now > state.resetAt) {
-      state.count = 0;
-      state.resetAt = now + RATE_LIMIT_WINDOW_MS;
-    }
-    if (state.count >= RATE_LIMIT_MAX) {
+    const rate = await consumeContactRate(ip);
+    if (!rate.allowed) {
       return NextResponse.json({ error: 'Rate limit exceeded' }, { status: 429 });
     }
 
@@ -102,9 +96,7 @@ export async function POST(req) {
     contacts.push(entry);
     await writeContacts(contacts);
 
-    // increment rate counter
-    state.count += 1;
-    rateMap.set(ip, state);
+  // Note: rate limiter already increments the counter on consumeContactRate
 
     return NextResponse.json({ success: true, entry }, { status: 201 });
   } catch (err) {
@@ -114,19 +106,10 @@ export async function POST(req) {
 }
 
 export async function GET(req) {
-  // Admin-only read of contacts. Protect with ADMIN_TOKEN env var passed as header 'x-admin-token' or query param 'token'.
-  const url = new URL(req.url);
-  const tokenHeader = req.headers.get("x-admin-token");
-  const tokenQuery = url.searchParams.get("token");
-  const token = tokenHeader || tokenQuery;
-
-  // Allow either Basic Auth header or ADMIN_TOKEN via header/query
-  const authHeader = req.headers.get('authorization');
-  const basicOk = checkBasicAuthFromHeader(authHeader);
-  if (!basicOk) {
-    if (!process.env.ADMIN_TOKEN || token !== process.env.ADMIN_TOKEN) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+  // Admin-only read of contacts. Use the centralized authorizeAdmin helper
+  const auth = await authorizeAdmin(req);
+  if (!auth || !auth.ok) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   try {
