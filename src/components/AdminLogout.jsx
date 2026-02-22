@@ -23,8 +23,12 @@ export default function AdminLogout() {
   }
 
   return (
-    <button onClick={logout} disabled={loading} className="px-3 py-2 bg-red-600 text-white rounded">
-      {loading ? 'Logging out...' : 'Logout'}
+    <button 
+      onClick={logout} 
+      disabled={loading} 
+      className="px-4 py-1.5 bg-red-50 text-red-600 border border-red-100 rounded-lg text-sm font-bold hover:bg-red-600 hover:text-white transition-all disabled:opacity-50"
+    >
+      {loading ? 'جاري الخروج...' : 'تسجيل الخروج'}
     </button>
   );
 }

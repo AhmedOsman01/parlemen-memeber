@@ -1,6 +1,7 @@
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import jwt from 'jsonwebtoken';
+import AdminNav from '@/components/admin/AdminNav';
 
 export default async function AdminLayout({ children }) {
     const cookieStore = await cookies();
@@ -17,16 +18,16 @@ export default async function AdminLayout({ children }) {
             }
         } catch (err) {
             console.error('AdminLayout auth error:', err.message);
-            // If the token is invalid/expired, we let the user stay on the page 
-            // OR redirect them, but since proxy.js handles /admin routes, 
-            // this catch block will primarily hit if they have a BAD token.
             redirect('/admin/login?error=session_expired');
         }
     }
 
     return (
-        <div className="admin-wrapper min-h-screen bg-gray-50">
-            {children}
+        <div className="admin-wrapper min-h-screen bg-gray-50 flex flex-col pt-[72px]">
+            <AdminNav />
+            <main className="flex-1">
+                {children}
+            </main>
         </div>
     );
 }

@@ -22,6 +22,17 @@ export default function Navbar() {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  /* التحقق من حالة المسؤول عبر ملفات تعريف الارتباط */
+  useEffect(() => {
+    const checkAdmin = () => {
+      const hasToken = document.cookie.split(';').some(c => c.trim().startsWith('admin_jwt='));
+      setIsAdmin(hasToken);
+    };
+    checkAdmin();
+    // Re-check periodically or on focus if needed, but for now simple check is fine
+  }, [pathname]);
 
   /* الاستماع للتمرير لتبديل خلفية الزجاج */
   useEffect(() => {
@@ -89,11 +100,24 @@ export default function Navbar() {
               </li>
             );
           })}
+          {isAdmin && (
+            <li>
+              <Link
+                href="/admin"
+                className={`relative text-sm font-bold tracking-wider transition-colors duration-300 ${
+                  pathname.startsWith("/admin") ? "text-(--gold)" : "text-white/90 hover:text-(--gold)"
+                }`}
+              >
+                لوحة التحكم
+                <span className={`absolute -bottom-1 right-0 h-0.5 bg-(--gold) transition-all duration-300 ${pathname.startsWith("/admin") ? "w-full" : "w-0"}`} />
+              </Link>
+            </li>
+          )}
         </ul>
 
         {/* ---------- أزرار سطح المكتب ---------- */}
         <div className="hidden md:flex items-center gap-3">
-          {!["/admin/contacts", "/admin/login"].includes(pathname) && (
+          {!isAdmin && !pathname.startsWith("/admin") && (
             <Link
               href="/admin/login"
               className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border-2 border-(--gold) text-(--gold) text-sm font-semibold transition-all duration-300 hover:bg-(--gold) hover:text-(--navy) hover:shadow-lg hover:shadow-(--gold)/20"
@@ -159,7 +183,14 @@ export default function Navbar() {
             >
               تواصل معنا
             </Link>
-            {!["/admin/contacts", "/admin/login"].includes(pathname) && (
+            {isAdmin ? (
+              <Link
+                href="/admin"
+                className="w-full text-center px-8 py-3 rounded-full bg-(--navy-light) text-white font-semibold text-lg transition-all duration-300 hover:bg-(--navy)"
+              >
+                لوحة التحكم
+              </Link>
+            ) : !pathname.startsWith("/admin") && (
               <Link
                 href="/admin/login"
                 className="w-full text-center px-8 py-3 rounded-full border-2 border-(--gold) text-(--gold) font-semibold text-lg transition-all duration-300 hover:bg-(--gold) hover:text-(--navy)"
