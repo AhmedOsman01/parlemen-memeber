@@ -1,3 +1,5 @@
+import { NextResponse } from "next/server";
+import { newsArticles } from "@/data/news";
 import { listNews } from "@/models/newsModel";
 
 export async function GET() {
