@@ -91,13 +91,17 @@ export default function Navbar() {
           })}
         </ul>
 
-        {/* ---------- زر التواصل (سطح المكتب) ---------- */}
-        <Link
-          href="/contact"
-    className="hidden md:inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-(--gold) text-(--navy) text-sm font-semibold transition-all duration-300 hover:bg-(--gold-light) hover:shadow-lg hover:shadow-(--gold)/20"
-        >
-          تواصل معنا
-        </Link>
+        {/* ---------- أزرار سطح المكتب ---------- */}
+        <div className="hidden md:flex items-center gap-3">
+          {!["/admin/contacts", "/admin/login"].includes(pathname) && (
+            <Link
+              href="/admin/login"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border-2 border-(--gold) text-(--gold) text-sm font-semibold transition-all duration-300 hover:bg-(--gold) hover:text-(--navy) hover:shadow-lg hover:shadow-(--gold)/20"
+            >
+              ◆ ادارة
+            </Link>
+          )}
+        </div>
 
         {/* ---------- زر القائمة (الهاتف) ---------- */}
         <button
@@ -148,12 +152,22 @@ export default function Navbar() {
               </Link>
             );
           })}
-          <Link
-            href="/contact"
-            className="mt-4 px-8 py-3 rounded-full bg-(--gold) text-(--navy) font-semibold text-lg transition-all duration-300 hover:bg-(--gold-light)"
-          >
-            تواصل معنا
-          </Link>
+          <div className="flex flex-col gap-4 mt-4 w-full px-8">
+            <Link
+              href="/contact"
+              className="w-full text-center px-8 py-3 rounded-full bg-(--gold) text-(--navy) font-semibold text-lg transition-all duration-300 hover:bg-(--gold-light)"
+            >
+              تواصل معنا
+            </Link>
+            {!["/admin/contacts", "/admin/login"].includes(pathname) && (
+              <Link
+                href="/admin/login"
+                className="w-full text-center px-8 py-3 rounded-full border-2 border-(--gold) text-(--gold) font-semibold text-lg transition-all duration-300 hover:bg-(--gold) hover:text-(--navy)"
+              >
+                ◆ ادارة
+              </Link>
+            )}
+          </div>
         </div>
       </div>
     </header>

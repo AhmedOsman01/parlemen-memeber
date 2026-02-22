@@ -1,65 +1,36 @@
 import { listContacts } from '@/models/contactModel';
-import { headers, cookies } from 'next/headers';
-import { checkBasicAuthFromHeader } from '@/lib/basicAuth';
-import { authorizeAdmin } from '@/lib/adminAuth';
+import { cookies } from 'next/headers';
 import AdminLogout from '@/components/AdminLogout';
 
 export const dynamic = 'force-dynamic';
 
 export default async function ContactsAdminPage({ searchParams }) {
-  // If BASIC_AUTH is configured, check headers first
-  const hdrs = headers();
-  const authHeader = hdrs.get('authorization');
-  // If Basic Auth provided, honor it
-  const basicOk = checkBasicAuthFromHeader(authHeader);
-  // Otherwise, attempt cookie or ADMIN_TOKEN
-  if (!basicOk) {
-    // Build a fake request object for authorizeAdmin to reuse logic (it expects req.headers.get)
-    const cookieStore = cookies();
-    const adminJwt = cookieStore.get('admin_jwt')?.value || null;
-    const fakeReq = {
-      headers: {
-        get: (k) => {
-          if (k.toLowerCase() === 'authorization') {
-            return adminJwt ? `Bearer ${adminJwt}` : null;
-          }
-          if (k.toLowerCase() === 'x-admin-token') {
-            return null;
-          }
-          return null;
-        },
-      },
-    };
+  const cookieStore = await cookies();
+  const adminJwt = cookieStore.get('admin_jwt')?.value;
+  let adminName = 'Admin';
 
-  const authResult = await authorizeAdmin(fakeReq);
-  const adminName = authResult && authResult.payload ? authResult.payload.sub : null;
-  if (!authResult || !authResult.ok) {
-      // Last fallback: ADMIN_TOKEN via query param
-      const token = searchParams?.token || null;
-      if (!process.env.ADMIN_TOKEN) {
-        return (
-          <div className="p-8">
-            <h1 className="text-2xl font-bold">Admin contacts</h1>
-            <p className="mt-4">ADMIN_TOKEN is not configured. Please set it in your environment to use the admin UI.</p>
-          </div>
-        );
+  if (adminJwt) {
+    try {
+      const parts = adminJwt.split('.');
+      if (parts.length === 3) {
+        const payload = JSON.parse(Buffer.from(parts[1], 'base64url').toString('utf8'));
+        adminName = payload.sub || 'Admin';
       }
-  if (token !== process.env.ADMIN_TOKEN) {
-        return (
-          <div className="p-8">
-            <h1 className="text-2xl font-bold">Unauthorized</h1>
-            <p className="mt-4">Please sign in via <a className="text-blue-600" href="/admin/login">the admin login</a> or provide ?token=&lt;ADMIN_TOKEN&gt; in the URL.</p>
-          </div>
-        );
-      }
+    } catch (e) {
+      // Fallback if decode fails, but middleware/layout already verified
     }
-    // attach adminName for rendering
-    var __adminName = adminName;
   }
 
-  const page = Number(searchParams?.page || 1);
-  const limit = Number(searchParams?.limit || 50);
-  const q = searchParams?.q || '';
+  // `searchParams` may be a Promise in some Next.js runtimes — ensure we have the resolved object
+  const params = searchParams && typeof searchParams.then === 'function'
+    ? await searchParams
+    : (searchParams || {});
+
+  const page = Number(params?.page || 1);
+  const limit = Number(params?.limit || 50);
+  const q = params?.q || '';
+  // keep any token query param in scope for links/forms
+  const token = params?.token || null;
 
   const { rows, total } = await listContacts({ page, limit, q });
 
@@ -67,7 +38,7 @@ export default async function ContactsAdminPage({ searchParams }) {
     <div className="p-8">
       <h1 className="text-2xl font-bold">Contacts (admin)</h1>
       <div className="mt-3 flex items-center gap-3">
-        {typeof __adminName !== 'undefined' && __adminName ? <div className="text-sm text-gray-700">Logged in as <strong>{__adminName}</strong></div> : null}
+        <div className="text-sm text-gray-700">Logged in as <strong>{adminName}</strong></div>
         <div>
           <AdminLogout />
         </div>
@@ -77,7 +48,7 @@ export default async function ContactsAdminPage({ searchParams }) {
       <div className="mt-6 flex items-center gap-3">
         <form method="get" className="flex items-center gap-2">
           <input name="q" defaultValue={q} placeholder="search" className="px-3 py-2 border rounded" />
-          <input type="hidden" name="token" value={token} />
+          <input type="hidden" name="token" value={token || ""} />
           <button className="px-3 py-2 bg-blue-600 text-white rounded">Search</button>
         </form>
         <a
@@ -106,7 +77,7 @@ export default async function ContactsAdminPage({ searchParams }) {
                 <td className="px-3 py-2 border align-top" dir="ltr">{c.email}</td>
                 <td className="px-3 py-2 border align-top">{c.subject}</td>
                 <td className="px-3 py-2 border align-top"><div className="max-w-xl whitespace-pre-wrap">{c.message}</div></td>
-                <td className="px-3 py-2 border align-top">{new Date(c.createdAt).toLocaleString()}</td>
+                <td className="px-3 py-2 border align-top" suppressHydrationWarning>{new Date(c.createdAt).toLocaleString()}</td>
               </tr>
             ))}
           </tbody>

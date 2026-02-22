@@ -1,12 +1,31 @@
-// Minimal proxy stub
-// Next.js expects a function export for `proxy` when a proxy file exists.
-// We export a no-op proxy that simply forwards the request (NextResponse.next()).
 import { NextResponse } from 'next/server';
 
 export function proxy(request) {
-	// No-op: let Next.js handle the request normally. Implement custom logic here
-	// if you need to intercept requests (headers, rewrites, auth, etc.).
-	return NextResponse.next();
+    const { pathname } = request.nextUrl;
+
+    // Explicitly bypass admin login page and its sub-paths to avoid redirect loops
+    // We also bypass API routes as they handle their own auth
+    if (pathname === '/admin/login' || pathname.startsWith('/admin/login/') || pathname.startsWith('/api/')) {
+        return NextResponse.next();
+    }
+
+    // Protect all other /admin routes
+    if (pathname.startsWith('/admin')) {
+        const adminJwt = request.cookies.get('admin_jwt');
+
+        if (!adminJwt) {
+            const url = request.nextUrl.clone();
+            url.pathname = '/admin/login';
+            url.searchParams.set('from', pathname);
+            return NextResponse.redirect(url);
+        }
+    }
+
+    return NextResponse.next();
 }
 
-export const config = { matcher: [] };
+export const config = {
+    matcher: [
+        '/((?!_next/static|_next/image|favicon.ico).*)',
+    ],
+};

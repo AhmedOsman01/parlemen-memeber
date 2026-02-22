@@ -18,7 +18,8 @@ export default function AdminLogout() {
       // ignore
     }
     setLoading(false);
-    router.push('/admin/login');
+    // replace history entry so using browser back won't return to protected admin page
+    router.replace('/admin/login');
   }
 
   return (

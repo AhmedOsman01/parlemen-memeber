@@ -2,11 +2,22 @@ export const runtime = "nodejs";
 
 import { NextResponse } from "next/server";
 import { parseBasicAuthHeader } from "@/lib/basicAuth";
+import { connectToDatabase } from '@/lib/mongodb';
 
 // POST /api/admin/token
 // Accepts JSON { username, password, ttlSec } and returns { token, expiresAt }
-// Requires process.env.BASIC_AUTH_USER and BASIC_AUTH_PASS to be set for credential check.
-// Also requires ADMIN_JWT_SECRET to be set to sign tokens.
+// Validates credentials against `admins` collection (PBKDF2) or falls back to env BASIC_AUTH_USER/PASS.
+// Requires ADMIN_JWT_SECRET to be set to sign tokens.
+
+function verifyPbkdf2(password, stored) {
+  const crypto = require('crypto');
+  try {
+    const hash = crypto.pbkdf2Sync(password, stored.salt, stored.iterations, stored.keylen, stored.digest).toString('hex');
+    return hash === stored.hash;
+  } catch (e) {
+    return false;
+  }
+}
 
 export async function POST(req) {
   try {
@@ -19,7 +30,7 @@ export async function POST(req) {
 
     // Support Basic Auth header as well
     let creds = null;
-    const authHeader = req.headers.get('authorization');
+    const authHeader = req.headers.get && req.headers.get('authorization');
     if (authHeader && authHeader.startsWith('Basic ')) {
       creds = parseBasicAuthHeader(authHeader);
     } else if (username && password) {
@@ -30,20 +41,45 @@ export async function POST(req) {
       return NextResponse.json({ error: 'Missing credentials' }, { status: 400 });
     }
 
-    const expectedUser = process.env.BASIC_AUTH_USER;
-    const expectedPass = process.env.BASIC_AUTH_PASS;
-    if (!expectedUser || !expectedPass) {
-      return NextResponse.json({ error: 'Basic auth not configured on server' }, { status: 500 });
+    let validUser = false;
+    let subject = creds.user;
+
+    // Try DB lookup first
+    try {
+      const { db } = await connectToDatabase();
+      const admin = await db.collection('admins').findOne({ username: creds.user });
+      if (admin && admin.password && admin.password.algo === 'pbkdf2') {
+        if (verifyPbkdf2(creds.pass, admin.password)) {
+          validUser = true;
+          subject = admin.username;
+        }
+      }
+    } catch (e) {
+      // ignore DB errors and fallback to env
+      console.warn('admin token: db lookup failed', e.message || e);
     }
 
-    if (creds.user !== expectedUser || creds.pass !== expectedPass) {
+    // Fallback to env vars if DB didn't validate
+    if (!validUser) {
+      const expectedUser = process.env.BASIC_AUTH_USER;
+      const expectedPass = process.env.BASIC_AUTH_PASS;
+      if (!expectedUser || !expectedPass) {
+        return NextResponse.json({ error: 'Basic auth not configured on server' }, { status: 500 });
+      }
+      if (creds.user !== expectedUser || creds.pass !== expectedPass) {
+        return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 });
+      }
+      validUser = true;
+      subject = creds.user;
+    }
+
+    if (!validUser) {
       return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 });
     }
 
     // Issue JWT
     let jwt;
     try {
-      // dynamic require so project doesn't hard-fail when package missing during development
       jwt = require('jsonwebtoken');
     } catch (e) {
       return NextResponse.json({ error: 'jsonwebtoken package not installed' }, { status: 500 });
@@ -53,12 +89,13 @@ export async function POST(req) {
     const expiresIn = `${ttl}s`;
     const { randomUUID } = require('crypto');
     const jti = randomUUID();
-    const payload = { sub: creds.user, role: 'admin', jti };
+    const payload = { sub: subject, role: 'admin', jti };
     const token = jwt.sign(payload, process.env.ADMIN_JWT_SECRET, { expiresIn });
     const expiresAt = new Date(Date.now() + ttl * 1000).toISOString();
-    // Generate a CSRF token and set both admin_jwt (HttpOnly) and admin_csrf (readable by JS)
+
     const csrf = randomUUID();
-    const res = NextResponse.json({ expiresAt });
+    // Also return token and csrf in body to help client-side testing (cookie still set HttpOnly)
+    const res = NextResponse.json({ expiresAt, token, csrf });
     const isProd = process.env.NODE_ENV === 'production';
     res.cookies.set('admin_jwt', token, {
       httpOnly: true,
@@ -67,7 +104,6 @@ export async function POST(req) {
       path: '/',
       maxAge: ttl,
     });
-    // admin_csrf is intentionally NOT httpOnly so client-side can read it and send in headers
     res.cookies.set('admin_csrf', csrf, {
       httpOnly: false,
       secure: isProd,
@@ -81,7 +117,6 @@ export async function POST(req) {
       const { getRedisClient } = require('@/lib/rateLimiter');
       const client = await getRedisClient();
       if (client) {
-        // store active:{jti} = 1 with ttl
         await client.set(`active:${jti}`, '1', { EX: ttl });
       }
     } catch (e) {
