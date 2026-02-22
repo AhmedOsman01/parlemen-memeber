@@ -1,13 +1,16 @@
 import Link from "next/link";
 import Image from 'next/image';
-import { newsArticles } from "@/data/news";
+import { newsArticles as staticNews } from "@/data/news";
 import { notFound } from "next/navigation";
+import { getNewsBySlug, listNews } from "@/models/newsModel";
 
 /**
  * توليد المعلمات الثابتة لجميع المقالات (SSG)
  */
 export async function generateStaticParams() {
-  return newsArticles.map((article) => ({ slug: article.slug }));
+  const { rows } = await listNews({ limit: 100 });
+  const allSlugs = [...staticNews, ...rows].map((a) => ({ slug: a.slug }));
+  return allSlugs;
 }
 
 /**
@@ -15,7 +18,8 @@ export async function generateStaticParams() {
  */
 export async function generateMetadata({ params }) {
   const { slug } = await params;
-  const article = newsArticles.find((a) => a.slug === slug);
+  const dbArticle = await getNewsBySlug(slug);
+  const article = dbArticle || staticNews.find((a) => a.slug === slug);
   if (!article) return { title: "المقال غير موجود" };
   return {
     title: article.title,
@@ -28,7 +32,8 @@ export async function generateMetadata({ params }) {
  */
 export default async function NewsArticlePage({ params }) {
   const { slug } = await params;
-  const article = newsArticles.find((a) => a.slug === slug);
+  const dbArticle = await getNewsBySlug(slug);
+  const article = dbArticle || staticNews.find((a) => a.slug === slug);
 
   if (!article) {
     notFound();
@@ -52,7 +57,7 @@ export default async function NewsArticlePage({ params }) {
       </section>
 
       {/* محتوى المقال */}
-  <section className="py-12 lg:py-16 bg-(--cream-light)">
+      <section className="py-12 lg:py-16 bg-(--cream-light)">
         <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
           {/* رابط العودة */}
           <Link

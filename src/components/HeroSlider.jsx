@@ -15,7 +15,8 @@ import "swiper/css/effect-fade";
  * العرض الرئيسي — عرض شرائح Swiper بالعرض الكامل مع نصوص وأزرار
  * يستخدم تأثير التلاشي والتشغيل التلقائي والتنقل باللمس/لوحة المفاتيح
  */
-export default function HeroSlider() {
+export default function HeroSlider({ initialSlides }) {
+  const displaySlides = initialSlides && initialSlides.length > 0 ? initialSlides : slides;
   return (
     <section className="relative w-full h-screen min-h-[600px]" aria-label="عرض الصور الرئيسي">
       <Swiper
@@ -29,7 +30,7 @@ export default function HeroSlider() {
         dir="rtl"
         className="w-full h-full"
       >
-        {slides.map((slide) => (
+        {displaySlides.map((slide) => (
           <SwiperSlide key={slide.id}>
             <div className="relative w-full h-full">
               {/* صورة الخلفية */}

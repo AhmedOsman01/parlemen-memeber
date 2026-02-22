@@ -120,7 +120,7 @@ export default function ContactPage() {
                   ].map((social) => (
                     <a
                       key={social.name}
-                      href="#"
+                      href="https://www.facebook.com/"
                       className="flex items-center gap-3 px-4 py-3 rounded-xl bg-[var(--cream)] hover:bg-[var(--gold)]/15 transition-all duration-300 group"
                       aria-label={social.name}
                     >

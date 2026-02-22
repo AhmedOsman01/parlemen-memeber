@@ -1,7 +1,8 @@
 import Timeline from "@/components/Timeline";
 import Image from 'next/image';
 import SectionHeading from "@/components/SectionHeading";
-import { timelineData } from "@/data/timeline";
+import { timelineData as staticTimeline } from "@/data/timeline";
+import { listTimelineItems } from "@/models/timelineModel";
 import Link from "next/link";
 
 /**
@@ -16,11 +17,14 @@ export const metadata = {
 /**
  * صفحة عن النائب — السيرة الذاتية، المسيرة المهنية، والرؤية والرسالة
  */
-export default function AboutPage() {
+export default async function AboutPage() {
+  const dbTimeline = await listTimelineItems();
+  const timelineData = dbTimeline.length > 0 ? dbTimeline : staticTimeline;
+
   return (
     <>
       {/* رأس الصفحة */}
-  <section className="relative pt-32 pb-16 bg-(--navy)">
+      <section className="relative pt-32 pb-16 bg-(--navy)">
         <div className="absolute inset-0 opacity-10" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1529107386315-e1a2ed48a620?w=1920&q=40')", backgroundSize: "cover", backgroundPosition: "center" }} />
         <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-4xl sm:text-5xl font-bold text-white mb-4">
@@ -33,7 +37,7 @@ export default function AboutPage() {
       </section>
 
       {/* ==================== السيرة الذاتية ==================== */}
-  <section className="py-20 lg:py-28 bg-(--cream-light)">
+      <section className="py-20 lg:py-28 bg-(--cream-light)">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-5 gap-12 lg:gap-16 items-start">
             {/* الصورة — عمودين */}
@@ -122,12 +126,12 @@ export default function AboutPage() {
       </section>
 
       {/* ==================== الرؤية والرسالة ==================== */}
-  <section className="py-20 bg-(--navy)">
+      <section className="py-20 bg-(--navy)">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
             {/* الرؤية */}
             <div className="bg-white/5 rounded-2xl p-8 border border-white/10">
-                <div className="w-12 h-12 rounded-xl bg-(--gold)/20 flex items-center justify-center mb-6">
+              <div className="w-12 h-12 rounded-xl bg-(--gold)/20 flex items-center justify-center mb-6">
                 <svg className="w-6 h-6 text-(--gold)" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -160,7 +164,7 @@ export default function AboutPage() {
       </section>
 
       {/* ==================== المسيرة المهنية ==================== */}
-  <section className="py-20 lg:py-28 bg-(--cream-light)">
+      <section className="py-20 lg:py-28 bg-(--cream-light)">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionHeading
             title="المسيرة المهنية"
@@ -171,7 +175,7 @@ export default function AboutPage() {
       </section>
 
       {/* شريط الإجراء */}
-  <section className="py-16 bg-gradient-to-r from-(--gold-dark) to-(--gold)">
+      <section className="py-16 bg-gradient-to-r from-(--gold-dark) to-(--gold)">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-2xl sm:text-3xl font-bold text-(--navy) mb-4">
             هل ترغب في التواصل؟

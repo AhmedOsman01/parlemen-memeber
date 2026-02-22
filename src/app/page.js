@@ -3,26 +3,31 @@ import SectionHeading from "@/components/SectionHeading";
 import NewsCard from "@/components/NewsCard";
 import Link from "next/link";
 import Image from 'next/image';
-import { newsArticles } from "@/data/news";
+import { newsArticles as staticNews } from "@/data/news";
+import { listSlides } from "@/models/slideModel";
+import { listNews } from "@/models/newsModel";
 
 /**
  * الصفحة الرئيسية — عرض الشرائح، المقدمة، الإحصائيات، آخر الأخبار، وشريط الإجراء
  */
-export default function HomePage() {
-  const latestNews = newsArticles.slice(0, 3);
+export default async function HomePage() {
+  const slidesData = await listSlides();
+  const { rows: dbNews } = await listNews({ limit: 3 });
+
+  const latestNews = dbNews.length > 0 ? dbNews : staticNews.slice(0, 3);
 
   return (
     <>
       {/* ==================== العرض الرئيسي ==================== */}
-      <HeroSlider />
+      <HeroSlider initialSlides={slidesData} />
 
       {/* ==================== المقدمة ==================== */}
-  <section className="py-20 lg:py-28 bg-(--cream-light)">
+      <section className="py-20 lg:py-28 bg-(--cream-light)">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
             {/* الصورة */}
             <div className="relative order-2 lg:order-1">
-                <div className="aspect-[4/5] rounded-2xl overflow-hidden shadow-2xl relative">
+              <div className="aspect-[4/5] rounded-2xl overflow-hidden shadow-2xl relative">
                 <Image
                   src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=800&q=80"
                   alt="أحمد المصري — عضو مجلس النواب"
@@ -76,7 +81,7 @@ export default function HomePage() {
       </section>
 
       {/* ==================== الإحصائيات ==================== */}
-  <section className="py-16 bg-(--navy)">
+      <section className="py-16 bg-(--navy)">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
             {[
@@ -99,7 +104,7 @@ export default function HomePage() {
       </section>
 
       {/* ==================== آخر الأخبار ==================== */}
-  <section className="py-20 lg:py-28 bg-(--cream-light)">
+      <section className="py-20 lg:py-28 bg-(--cream-light)">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionHeading
             title="آخر الأخبار"
@@ -128,7 +133,7 @@ export default function HomePage() {
 
       {/* ==================== شريط الإجراء ==================== */}
       <section className="relative py-20 overflow-hidden">
-  <div className="absolute inset-0 bg-gradient-to-r from-(--navy-dark) to-(--navy)" />
+        <div className="absolute inset-0 bg-gradient-to-r from-(--navy-dark) to-(--navy)" />
         <div className="absolute inset-0 opacity-10" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1575517111478-7f6afd0973db?w=1920&q=40')", backgroundSize: "cover", backgroundPosition: "center" }} />
 
         <div className="relative z-10 mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 text-center">
