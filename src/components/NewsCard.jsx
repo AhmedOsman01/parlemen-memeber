@@ -18,7 +18,7 @@ export default function NewsCard({ article }) {
         {/* الصورة */}
         <div className="relative overflow-hidden aspect-[16/10]">
           <Image
-            src={article.image}
+            src={article.image || "https://images.unsplash.com/photo-1504711434969-e33886168d6c?w=800&q=80"}
             alt={article.title}
             fill
             className="object-cover transition-transform duration-500 group-hover:scale-110"

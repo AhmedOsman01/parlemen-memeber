@@ -1,5 +1,6 @@
 import { listTimelineItems } from "@/models/timelineModel";
 import Link from "next/link";
+import AdminRowActions from "@/components/admin/AdminRowActions";
 
 export default async function AdminTimelineList() {
     const items = await listTimelineItems();
@@ -28,8 +29,11 @@ export default async function AdminTimelineList() {
                                 <h3 className="font-bold text-lg">{item.title}</h3>
                                 <p className="text-gray-600 text-sm mt-1">{item.description}</p>
                                 <div className="flex gap-4 mt-3">
-                                    <button className="text-blue-600 text-xs hover:underline">تعديل</button>
-                                    <button className="text-red-600 text-xs hover:underline">حذف</button>
+                                    <AdminRowActions
+                                        id={item.id}
+                                        editUrl={`/admin/timeline/edit/${item.id}`}
+                                        deleteApiUrl="/api/admin/timeline"
+                                    />
                                 </div>
                             </div>
                         </div>

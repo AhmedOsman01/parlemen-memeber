@@ -1,5 +1,6 @@
 import { listSlides } from "@/models/slideModel";
 import Link from "next/link";
+import AdminRowActions from "@/components/admin/AdminRowActions";
 
 export default async function AdminSlidesList() {
     const slides = await listSlides();
@@ -32,8 +33,11 @@ export default async function AdminSlidesList() {
                             <h3 className="font-bold text-lg mb-1">{slide.title}</h3>
                             <p className="text-gray-500 text-sm mb-4 line-clamp-1">{slide.subtitle}</p>
                             <div className="flex gap-4 pt-4 border-t border-gray-50">
-                                <button className="text-blue-600 hover:underline font-semibold text-sm">تعديل</button>
-                                <button className="text-red-600 hover:underline font-semibold text-sm">حذف</button>
+                                <AdminRowActions
+                                    id={slide.id}
+                                    editUrl={`/admin/slides/edit/${slide.id}`}
+                                    deleteApiUrl="/api/admin/slides"
+                                />
                             </div>
                         </div>
                     </div>

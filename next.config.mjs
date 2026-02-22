@@ -6,6 +6,30 @@ const nextConfig = {
         protocol: "https",
         hostname: "images.unsplash.com",
       },
+      {
+        protocol: "https",
+        hostname: "plus.unsplash.com",
+      },
+      {
+        protocol: "https",
+        hostname: "**.googleusercontent.com",
+      },
+      {
+        protocol: "https",
+        hostname: "**.fbcdn.net",
+      },
+      {
+        protocol: "https",
+        hostname: "**.akamaihd.net",
+      },
+      {
+        protocol: "https",
+        hostname: "www.istockphoto.com",
+      },
+      {
+        protocol: "https",
+        hostname: "media.istockphoto.com",
+      },
     ],
   },
 };

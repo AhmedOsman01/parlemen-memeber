@@ -18,7 +18,18 @@ export async function listSlides() {
         .find({})
         .sort({ order: 1, createdAt: -1 })
         .toArray();
-    return rows.map(r => ({ ...r, id: r._id.toString() }));
+    return rows.map(r => {
+        const { _id, ...rest } = r;
+        return { ...rest, id: _id.toString(), createdAt: r.createdAt?.toISOString() };
+    });
+}
+
+export async function getSlideById(id) {
+    const { db } = await connectToDatabase();
+    const slide = await db.collection('slides').findOne({ _id: new ObjectId(id) });
+    if (!slide) return null;
+    const { _id, ...rest } = slide;
+    return { ...rest, id: _id.toString(), createdAt: slide.createdAt?.toISOString() };
 }
 
 export async function updateSlide(id, data) {

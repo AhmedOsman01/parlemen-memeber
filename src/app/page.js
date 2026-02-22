@@ -11,10 +11,11 @@ import { listNews } from "@/models/newsModel";
  * الصفحة الرئيسية — عرض الشرائح، المقدمة، الإحصائيات، آخر الأخبار، وشريط الإجراء
  */
 export default async function HomePage() {
-  const slidesData = await listSlides();
+  const slidesData = JSON.parse(JSON.stringify(await listSlides()));
   const { rows: dbNews } = await listNews({ limit: 3 });
 
   const latestNews = dbNews.length > 0 ? dbNews : staticNews.slice(0, 3);
+  const serializedNews = JSON.parse(JSON.stringify(latestNews));
 
   return (
     <>
@@ -112,7 +113,7 @@ export default async function HomePage() {
           />
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {latestNews.map((article) => (
+            {serializedNews.map((article) => (
               <NewsCard key={article.slug} article={article} />
             ))}
           </div>

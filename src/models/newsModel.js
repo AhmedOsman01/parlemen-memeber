@@ -25,14 +25,29 @@ export async function listNews({ page = 1, limit = 10, q = '' } = {}) {
         .limit(limit)
         .toArray();
 
-    return { rows: rows.map(r => ({ ...r, id: r._id.toString() })), total };
+    return {
+        rows: rows.map(r => {
+            const { _id, ...rest } = r;
+            return { ...rest, id: _id.toString(), createdAt: r.createdAt?.toISOString(), updatedAt: r.updatedAt?.toISOString() };
+        }),
+        total
+    };
 }
 
 export async function getNewsBySlug(slug) {
     const { db } = await connectToDatabase();
     const article = await db.collection('news').findOne({ slug });
     if (!article) return null;
-    return { ...article, id: article._id.toString() };
+    const { _id, ...rest } = article;
+    return { ...rest, id: _id.toString(), createdAt: article.createdAt?.toISOString(), updatedAt: article.updatedAt?.toISOString() };
+}
+
+export async function getNewsById(id) {
+    const { db } = await connectToDatabase();
+    const article = await db.collection('news').findOne({ _id: new ObjectId(id) });
+    if (!article) return null;
+    const { _id, ...rest } = article;
+    return { ...rest, id: _id.toString(), createdAt: article.createdAt?.toISOString(), updatedAt: article.updatedAt?.toISOString() };
 }
 
 export async function updateNews(id, data) {

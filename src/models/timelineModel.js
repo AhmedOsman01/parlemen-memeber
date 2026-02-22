@@ -18,7 +18,18 @@ export async function listTimelineItems() {
         .find({})
         .sort({ year: -1, createdAt: -1 })
         .toArray();
-    return rows.map(r => ({ ...r, id: r._id.toString() }));
+    return rows.map(r => {
+        const { _id, ...rest } = r;
+        return { ...rest, id: _id.toString(), createdAt: r.createdAt?.toISOString() };
+    });
+}
+
+export async function getTimelineItemById(id) {
+    const { db } = await connectToDatabase();
+    const item = await db.collection('timeline').findOne({ _id: new ObjectId(id) });
+    if (!item) return null;
+    const { _id, ...rest } = item;
+    return { ...rest, id: _id.toString(), createdAt: item.createdAt?.toISOString() };
 }
 
 export async function updateTimelineItem(id, data) {

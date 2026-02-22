@@ -36,7 +36,7 @@ export default function HeroSlider({ initialSlides }) {
               {/* صورة الخلفية */}
               <div
                 className="absolute inset-0 bg-cover bg-center"
-                style={{ backgroundImage: `url(${slide.image})` }}
+                style={{ backgroundImage: `url(${slide.image || "https://images.unsplash.com/photo-1575517111478-7f6afd0973db?w=1920&q=80"})` }}
               >
                 <div className="absolute inset-0 bg-gradient-to-t from-(--navy-dark) via-(--navy)/60 to-(--navy)/30" />
               </div>
@@ -56,15 +56,27 @@ export default function HeroSlider({ initialSlides }) {
                     </p>
 
                     {/* زر الإجراء */}
-                    <Link
-                      href={slide.cta.href}
-                      className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full bg-(--gold) text-(--navy) font-semibold text-base transition-all duration-300 hover:bg-(--gold-light) hover:shadow-xl hover:shadow-(--gold)/30 hover:scale-105"
-                    >
-                      {slide.cta.label}
-                      <svg className="w-5 h-5 rtl:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                      </svg>
-                    </Link>
+                    {slide.cta ? (
+                      <Link
+                        href={slide.cta.href}
+                        className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full bg-(--gold) text-(--navy) font-semibold text-base transition-all duration-300 hover:bg-(--gold-light) hover:shadow-xl hover:shadow-(--gold)/30 hover:scale-105"
+                      >
+                        {slide.cta.label}
+                        <svg className="w-5 h-5 rtl:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                        </svg>
+                      </Link>
+                    ) : (
+                      <Link
+                        href="/contact"
+                        className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full bg-(--gold) text-(--navy) font-semibold text-base transition-all duration-300 hover:bg-(--gold-light) hover:shadow-xl hover:shadow-(--gold)/30 hover:scale-105"
+                      >
+                        تواصل معنا
+                        <svg className="w-5 h-5 rtl:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                        </svg>
+                      </Link>
+                    )}
                   </div>
                 </div>
               </div>
