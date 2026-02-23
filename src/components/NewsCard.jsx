@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from 'next/image';
+import { getDirectImageUrl } from "@/lib/imageUtils";
 
 /**
  * بطاقة الأخبار — مكون بطاقة لصفحة الأخبار
@@ -18,7 +19,7 @@ export default function NewsCard({ article }) {
         {/* الصورة */}
         <div className="relative overflow-hidden aspect-[16/10]">
           <Image
-            src={article.image || "https://images.unsplash.com/photo-1504711434969-e33886168d6c?w=800&q=80"}
+            src={getDirectImageUrl(article.image) || "https://images.unsplash.com/photo-1504711434969-e33886168d6c?w=800&q=80"}
             alt={article.title}
             fill
             className="object-cover transition-transform duration-500 group-hover:scale-110"

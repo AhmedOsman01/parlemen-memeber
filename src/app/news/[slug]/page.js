@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from 'next/image';
+import { getDirectImageUrl } from "@/lib/imageUtils";
 import { newsArticles as staticNews } from "@/data/news";
 import { notFound } from "next/navigation";
 import { getNewsBySlug, listNews } from "@/models/newsModel";
@@ -51,7 +52,7 @@ export default async function NewsArticlePage({ params }) {
       {/* صورة البطل */}
       <section className="relative pt-24 pb-0">
         <div className="aspect-[21/9] max-h-[480px] w-full overflow-hidden relative">
-          <Image src={article.image} alt={article.title} fill className="w-full h-full object-cover" sizes="100vw" />
+          <Image src={getDirectImageUrl(article.image)} alt={article.title} fill className="w-full h-full object-cover" sizes="100vw" />
           <div className="absolute inset-0 bg-gradient-to-t from-(--cream-light) via-transparent to-(--navy)/30" />
         </div>
       </section>

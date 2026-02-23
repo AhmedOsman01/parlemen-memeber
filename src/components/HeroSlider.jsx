@@ -4,6 +4,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Pagination, Navigation, EffectFade } from "swiper/modules";
 import Link from "next/link";
 import { slides } from "@/data/slides";
+import { getDirectImageUrl } from "@/lib/imageUtils";
 
 /* أنماط Swiper */
 import "swiper/css";
@@ -36,7 +37,7 @@ export default function HeroSlider({ initialSlides }) {
               {/* صورة الخلفية */}
               <div
                 className="absolute inset-0 bg-cover bg-center"
-                style={{ backgroundImage: `url(${slide.image || "https://images.unsplash.com/photo-1575517111478-7f6afd0973db?w=1920&q=80"})` }}
+                style={{ backgroundImage: `url(${getDirectImageUrl(slide.image) || "https://images.unsplash.com/photo-1575517111478-7f6afd0973db?w=1920&q=80"})` }}
               >
                 <div className="absolute inset-0 bg-gradient-to-t from-(--navy-dark) via-(--navy)/60 to-(--navy)/30" />
               </div>
