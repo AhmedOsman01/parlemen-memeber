@@ -1,4 +1,5 @@
 import "./globals.css";
+import { cookies } from "next/headers";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import AdminNav from "@/components/admin/AdminNav";
