@@ -28,7 +28,7 @@ export default function Navbar() {
   useEffect(() => {
     const checkAdmin = () => {
       const hasToken = document.cookie.split(';').some(c => c.trim().startsWith('admin_jwt='));
-      setIsAdmin(hasToken);
+      queueMicrotask(() => setIsAdmin(hasToken));
     };
     checkAdmin();
     // Re-check periodically or on focus if needed, but for now simple check is fine
@@ -43,11 +43,8 @@ export default function Navbar() {
 
   /* إغلاق قائمة الهاتف عند تغيير المسار */
   useEffect(() => {
-    // defer closing the mobile menu to the next tick to avoid synchronous setState in effect
-    if (!mobileOpen) return;
-    const t = setTimeout(() => setMobileOpen(false), 0);
-    return () => clearTimeout(t);
-  }, [pathname, mobileOpen]);
+    queueMicrotask(() => setMobileOpen(false));
+  }, [pathname]);
 
   // Combine regular links with admin link if authenticated
   const visibleLinks = [...navLinks];
