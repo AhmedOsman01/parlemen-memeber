@@ -1,7 +1,6 @@
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import jwt from 'jsonwebtoken';
-import AdminNav from '@/components/admin/AdminNav';
 
 export default async function AdminLayout({ children }) {
     const cookieStore = await cookies();
