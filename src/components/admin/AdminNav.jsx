@@ -38,7 +38,7 @@ export default function AdminNav() {
           </div>
 
           {/* Links (Center) */}
-          <div className="flex justify-center h-full gap-1 items-center">
+          <div className="flex justify-center h-full gap-1 items-center overflow-x-auto no-scrollbar px-2">
             {adminLinks.map((link) => {
               const isActive = pathname === link.href || (link.href !== "/admin" && pathname.startsWith(link.href));
               return (
@@ -50,9 +50,10 @@ export default function AdminNav() {
                       ? "bg-gold/10 text-navy"
                       : "text-gray-500 hover:bg-gray-50 hover:text-navy"
                   }`}
+                  title={link.label}
                 >
                   <span className="text-lg">{link.icon}</span>
-                  <span>{link.label}</span>
+                  <span className="hidden sm:inline">{link.label}</span>
                 </Link>
               );
             })}

@@ -99,7 +99,7 @@ export default function Navbar() {
                   <li key={link.href}>
                     <Link
                       href={link.href}
-                      className={`px-4 py-2 rounded-full text-sm font-semibold transition-all duration-300 relative group/item overflow-hidden ${
+                      className={`px-2 lg:px-4 py-2 rounded-full text-xs lg:text-sm font-semibold transition-all duration-300 relative group/item overflow-hidden ${
                         isActive
                           ? "text-(--navy) bg-(--gold)"
                           : "text-white/80 hover:text-white hover:bg-white/10"
@@ -159,11 +159,12 @@ export default function Navbar() {
 
       {/* ---------- قائمة الهاتف ---------- */}
       <div
-        className={`md:hidden fixed inset-0 top-0 bg-(--navy-dark)/95 backdrop-blur-md transition-all duration-500 ${
+        className={`md:hidden fixed inset-0 bg-(--navy-dark)/95 backdrop-blur-md transition-all duration-500 ${
           mobileOpen
             ? "opacity-100 pointer-events-auto"
             : "opacity-0 pointer-events-none"
         }`}
+        style={{ top: isAdmin ? '56px' : '0' }}
       >
         <div className="flex flex-col items-center justify-center h-full gap-8">
           {visibleLinks.map((link, idx) => {
