@@ -64,7 +64,7 @@ export default function Navbar() {
       role="banner"
     >
       <nav
-        className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 h-full"
+        className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 h-full relative z-20"
         aria-label="التنقل الرئيسي"
       >
         <div className="flex items-center justify-between md:grid md:grid-cols-3 h-full">
@@ -156,7 +156,7 @@ export default function Navbar() {
 
       {/* ---------- قائمة الهاتف ---------- */}
       <div
-        className={`md:hidden fixed inset-0 bg-(--navy-dark)/95 backdrop-blur-md transition-all duration-500 ${
+        className={`md:hidden fixed inset-0 bg-(--navy-dark)/95 backdrop-blur-md transition-all duration-500 z-10 ${
           mobileOpen
             ? "opacity-100 pointer-events-auto"
             : "opacity-0 pointer-events-none"
