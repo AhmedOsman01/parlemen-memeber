@@ -49,6 +49,12 @@ export default function Navbar() {
     return () => clearTimeout(t);
   }, [pathname, mobileOpen]);
 
+  // Combine regular links with admin link if authenticated
+  const visibleLinks = [...navLinks];
+  if (isAdmin) {
+    visibleLinks.push({ label: "لوحة التحكم", href: "/admin" });
+  }
+
   return (
     <header
       className={`fixed left-0 w-full z-50 transition-all duration-500 ${
@@ -87,8 +93,8 @@ export default function Navbar() {
           {/* ---------- روابط المركز (Desktop only) ---------- */}
           <div className="hidden md:flex justify-center">
             <ul className="flex items-center gap-1 bg-white/5 backdrop-blur-md rounded-full px-2 py-1.5 border border-white/10 shadow-xl overflow-hidden">
-              {navLinks.map((link) => {
-                const isActive = pathname === link.href;
+              {visibleLinks.map((link) => {
+                const isActive = pathname === link.href || (link.href !== '/' && pathname.startsWith(link.href));
                 return (
                   <li key={link.href}>
                     <Link
@@ -104,20 +110,6 @@ export default function Navbar() {
                   </li>
                 );
               })}
-              {isAdmin && (
-                <li>
-                  <Link
-                    href="/admin"
-                    className={`px-4 py-2 rounded-full text-sm font-bold transition-all duration-300 relative group/item overflow-hidden ${
-                      pathname.startsWith("/admin")
-                        ? "text-(--navy) bg-(--gold)"
-                        : "text-white/90 hover:text-white hover:bg-white/15"
-                    }`}
-                  >
-                    <span className="relative z-10">لوحة التحكم</span>
-                  </Link>
-                </li>
-              )}
             </ul>
           </div>
 
@@ -174,8 +166,8 @@ export default function Navbar() {
         }`}
       >
         <div className="flex flex-col items-center justify-center h-full gap-8">
-          {navLinks.map((link, idx) => {
-            const isActive = pathname === link.href;
+          {visibleLinks.map((link, idx) => {
+            const isActive = pathname === link.href || (link.href !== '/' && pathname.startsWith(link.href));
             return (
               <Link
                 key={link.href}
@@ -196,14 +188,7 @@ export default function Navbar() {
             >
               تواصل معنا
             </Link>
-            {isAdmin ? (
-              <Link
-                href="/admin"
-                className="w-full text-center px-8 py-3 rounded-full bg-(--navy-light) text-white font-semibold text-lg transition-all duration-300 hover:bg-(--navy)"
-              >
-                لوحة التحكم
-              </Link>
-            ) : !pathname.startsWith("/admin") && (
+            {!isAdmin && !pathname.startsWith("/admin") && (
               <Link
                 href="/admin/login"
                 className="w-full text-center px-8 py-3 rounded-full border-2 border-(--gold) text-(--gold) font-semibold text-lg transition-all duration-300 hover:bg-(--gold) hover:text-(--navy)"
