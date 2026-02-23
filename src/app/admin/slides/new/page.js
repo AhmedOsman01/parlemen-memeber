@@ -34,14 +34,26 @@ export default function NewSlidePage() {
 
     return (
         <div className="max-w-4xl mx-auto p-8">
-            <div className="mb-8 flex items-center justify-between">
-                <div>
-                    <h1 className="text-3xl font-bold">إضافة صورة سلايدر جديدة</h1>
-                    <p className="text-gray-600">أضف صوراً جديدة للعرض المتحرك في الصفحة الرئيسية.</p>
+            <div className="mb-8 overflow-hidden">
+                {/* Back Button */}
+                <div className="mb-6">
+                    <Link
+                        href="/admin/slides"
+                        className="inline-flex items-center gap-2 text-sm font-bold text-gray-500 hover:text-(--navy) transition-all group"
+                    >
+                        <span className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 group-hover:bg-(--gold) group-hover:text-(--navy) transition-all">
+                            →
+                        </span>
+                        الرجوع لقائمة السلايدر
+                    </Link>
                 </div>
-                <Link href="/admin/slides" className="text-navy hover:underline">
-                    العودة للقائمة
-                </Link>
+
+                <div className="flex items-center justify-between">
+                    <div>
+                        <h1 className="text-3xl font-bold">إضافة صورة سلايدر جديدة</h1>
+                        <p className="text-gray-600">أضف صوراً جديدة للعرض المتحرك في الصفحة الرئيسية.</p>
+                    </div>
+                </div>
             </div>
 
             <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 space-y-6">

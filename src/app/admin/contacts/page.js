@@ -1,6 +1,7 @@
 import { listContacts } from '@/models/contactModel';
 import { cookies } from 'next/headers';
 import AdminLogout from '@/components/AdminLogout';
+import Link from 'next/link';
 
 export const dynamic = 'force-dynamic';
 
@@ -36,6 +37,19 @@ export default async function ContactsAdminPage({ searchParams }) {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      {/* Back Button */}
+      <div className="mb-6">
+        <Link
+          href="/admin"
+          className="inline-flex items-center gap-2 text-sm font-bold text-gray-500 hover:text-(--navy) transition-all group"
+        >
+          <span className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 group-hover:bg-(--gold) group-hover:text-(--navy) transition-all">
+            →
+          </span>
+          الرجوع للوحة التحكم
+        </Link>
+      </div>
+
       {/* Header Section */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
         <div>

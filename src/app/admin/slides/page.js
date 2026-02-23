@@ -6,7 +6,20 @@ export default async function AdminSlidesList() {
     const slides = await listSlides();
 
     return (
-        <div className="p-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            {/* Back Button */}
+            <div className="mb-6">
+                <Link
+                    href="/admin"
+                    className="inline-flex items-center gap-2 text-sm font-bold text-gray-500 hover:text-(--navy) transition-all group"
+                >
+                    <span className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 group-hover:bg-(--gold) group-hover:text-(--navy) transition-all">
+                        →
+                    </span>
+                    الرجوع للوحة التحكم
+                </Link>
+            </div>
+
             <div className="flex items-center justify-between mb-8">
                 <div>
                     <h1 className="text-3xl font-bold">إدارة السلايدر</h1>
