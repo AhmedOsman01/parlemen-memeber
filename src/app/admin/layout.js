@@ -23,8 +23,7 @@ export default async function AdminLayout({ children }) {
     }
 
     return (
-        <div className="admin-wrapper min-h-screen bg-gray-50 flex flex-col pt-[72px]">
-            <AdminNav />
+        <div className="admin-wrapper min-h-screen bg-gray-50 flex flex-col">
             <main className="flex-1">
                 {children}
             </main>

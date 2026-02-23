@@ -6,30 +6,39 @@ export default function AdminDashboard() {
             title: 'إدارة الأخبار',
             description: 'أضف، عدل أو احذف مقالات الأخبار والمقالات.',
             href: '/admin/news',
-            newHref: '/admin/news/new',
+            actionHref: '/admin/news/new',
+            actionLabel: 'إضافة جديد',
+            actionIcon: '+',
             icon: '📰',
             color: 'bg-blue-500',
         },
         {
-            title: 'إدارة الصور المتحركة',
+            title: 'إدارة السلايدر',
             description: 'إدارة صور السلايدر في الصفحة الرئيسية.',
             href: '/admin/slides',
-            newHref: '/admin/slides/new',
+            actionHref: '/admin/slides/new',
+            actionLabel: 'إضافة جديد',
+            actionIcon: '+',
             icon: '🖼️',
-            color: 'bg-gold-600',
+            color: 'bg-amber-600',
         },
         {
             title: 'إدارة الجدول الزمني',
             description: 'تحديث مسيرة النائب والجدول الزمني المهني.',
             href: '/admin/timeline',
-            newHref: '/admin/timeline/new',
+            actionHref: '/admin/timeline/new',
+            actionLabel: 'إضافة جديد',
+            actionIcon: '+',
             icon: '⏳',
             color: 'bg-navy-600',
         },
         {
             title: 'رسائل التواصل',
-            description: 'عرض وإدارة رسائل المواطنين.',
+            description: 'عرض وإدارة رسائل المواطنين وتصدير البيانات.',
             href: '/admin/contacts',
+            actionHref: '/api/contact/export',
+            actionLabel: 'تصدير CSV',
+            actionIcon: '📥',
             icon: '✉️',
             color: 'bg-green-600',
         },
@@ -56,10 +65,10 @@ export default function AdminDashboard() {
                                 <span>عرض الكل</span>
                                 <span>←</span>
                             </Link>
-                            {card.newHref && (
-                                <Link href={card.newHref} className="flex items-center justify-between w-full px-4 py-2 rounded-lg bg-(--gold) text-(--navy) font-semibold text-sm hover:bg-(--gold-light) transition-colors">
-                                    <span>إضافة جديد</span>
-                                    <span>+</span>
+                            {card.actionHref && (
+                                <Link href={card.actionHref} className="flex items-center justify-between w-full px-4 py-2 rounded-lg bg-(--gold) text-(--navy) font-semibold text-sm hover:bg-(--gold-light) transition-colors">
+                                    <span>{card.actionLabel}</span>
+                                    <span>{card.actionIcon}</span>
                                 </Link>
                             )}
                         </div>

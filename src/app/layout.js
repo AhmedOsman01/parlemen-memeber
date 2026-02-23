@@ -1,6 +1,7 @@
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import AdminNav from "@/components/admin/AdminNav";
 import { Noto_Kufi_Arabic, Noto_Naskh_Arabic } from 'next/font/google';
 
 const notoKufi = Noto_Kufi_Arabic({
@@ -40,10 +41,14 @@ export const metadata = {
   },
 };
 
-export default function RootLayout({ children }) {
+export default async function RootLayout({ children }) {
+  const cookieStore = await cookies();
+  const isAdmin = cookieStore.get('admin_jwt')?.value;
+
   return (
     <html lang="ar" dir="rtl" suppressHydrationWarning className={`scroll-smooth ${notoNaskh.className}`}>
-      <body className="antialiased min-h-screen flex flex-col">
+      <body className={`antialiased min-h-screen flex flex-col ${isAdmin ? 'pt-[56px]' : ''}`}>
+        <AdminNav />
         <Navbar />
         <main className="flex-1">{children}</main>
         <Footer />

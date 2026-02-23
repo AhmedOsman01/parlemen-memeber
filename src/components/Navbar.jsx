@@ -51,7 +51,9 @@ export default function Navbar() {
 
   return (
     <header
-      className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ${
+      className={`fixed left-0 w-full z-50 transition-all duration-500 ${
+        isAdmin ? "top-[56px]" : "top-0"
+      } ${
         scrolled
           ? "glass shadow-lg py-3"
           : "bg-transparent py-5"

@@ -8,7 +8,7 @@ export default function AdminLoginPage() {
   const [user, setUser] = useState("");
   const [pass, setPass] = useState("");
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);  
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   async function submit(e) {
@@ -52,8 +52,8 @@ export default function AdminLoginPage() {
         // ignore
       }
 
-      // Redirect to admin contacts and replace history
-      router.replace('/admin/contacts');
+      // Redirect to admin dashboard and replace history
+      router.replace('/admin');
     } catch (e) {
       setError('Network error: ' + e.message);
     } finally {

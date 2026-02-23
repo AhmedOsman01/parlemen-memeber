@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import AdminLogout from "@/components/AdminLogout";
@@ -14,15 +15,25 @@ const adminLinks = [
 
 export default function AdminNav() {
   const pathname = usePathname();
+  const [isAdmin, setIsAdmin] = useState(false);
 
-  // Don't show admin nav on login page
-  if (pathname === "/admin/login") return null;
+  // Check for admin token on every path change
+  useEffect(() => {
+    const hasToken = document.cookie.split(';').some(c => c.trim().startsWith('admin_jwt='));
+    queueMicrotask(() => {
+      setIsAdmin(hasToken);
+    });
+  }, [pathname]);
+
+  // Don't show admin nav on login page or if not logged in
+  if (pathname === "/admin/login" || !isAdmin) return null;
 
   return (
-    <div className="bg-white border-b border-gray-100 shadow-sm sticky top-[72px] z-40">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-14">
-          <div className="flex items-center gap-1 sm:gap-4 overflow-x-auto no-scrollbar py-2">
+    <div className="bg-white border-b border-gray-100 shadow-sm fixed top-0 left-0 w-full z-[60] h-14">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full">
+        <div className="flex items-center justify-between h-full">
+          <div className="flex items-center gap-2 sm:gap-6 overflow-x-auto no-scrollbar py-2">
+            <span className="text-xs font-bold text-gray-400 uppercase tracking-widest hidden lg:block border-l pl-4 ml-2">إدارة الموقع:</span>
             {adminLinks.map((link) => {
               const isActive = pathname === link.href || (link.href !== "/admin" && pathname.startsWith(link.href));
               return (
@@ -35,8 +46,8 @@ export default function AdminNav() {
                       : "text-gray-500 hover:bg-gray-50 hover:text-navy"
                   }`}
                 >
-                  <span>{link.icon}</span>
-                  <span className="hidden xs:inline">{link.label}</span>
+                  <span className="text-lg">{link.icon}</span>
+                  <span>{link.label}</span>
                 </Link>
               );
             })}
