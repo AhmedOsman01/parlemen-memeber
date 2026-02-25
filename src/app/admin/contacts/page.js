@@ -1,7 +1,6 @@
 import { listContacts } from '@/models/contactModel';
 import { cookies } from 'next/headers';
-import AdminLogout from '@/components/AdminLogout';
-import Link from 'next/link';
+import AdminBreadcrumb from '@/components/admin/AdminBreadcrumb';
 
 export const dynamic = 'force-dynamic';
 
@@ -18,11 +17,10 @@ export default async function ContactsAdminPage({ searchParams }) {
         adminName = payload.sub || 'Admin';
       }
     } catch (e) {
-      // Fallback if decode fails, but middleware/layout already verified
+      // Fallback if decode fails
     }
   }
 
-  // `searchParams` may be a Promise in some Next.js runtimes — ensure we have the resolved object
   const params = searchParams && typeof searchParams.then === 'function'
     ? await searchParams
     : (searchParams || {});
@@ -30,25 +28,14 @@ export default async function ContactsAdminPage({ searchParams }) {
   const page = Number(params?.page || 1);
   const limit = Number(params?.limit || 50);
   const q = params?.q || '';
-  // keep any token query param in scope for links/forms
   const token = params?.token || null;
 
   const { rows, total } = await listContacts({ page, limit, q });
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      {/* Back Button */}
-      <div className="mb-6">
-        <Link
-          href="/admin"
-          className="inline-flex items-center gap-2 text-sm font-bold text-gray-500 hover:text-(--navy) transition-all group"
-        >
-          <span className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 group-hover:bg-(--gold) group-hover:text-(--navy) transition-all">
-            →
-          </span>
-          الرجوع للوحة التحكم
-        </Link>
-      </div>
+      {/* Breadcrumb */}
+      <AdminBreadcrumb items={[{ label: 'إدارة الرسائل' }]} />
 
       {/* Header Section */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
@@ -77,7 +64,13 @@ export default async function ContactsAdminPage({ searchParams }) {
             </div>
           </div>
           <input type="hidden" name="token" value={token || ""} />
-          <button className="px-6 py-2.5 bg-(--navy) text-white rounded-xl font-bold text-sm hover:bg-(--navy-light) transition-all shadow-lg shadow-(--navy)/10">
+          <button
+            type="submit"
+            className="inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-(--navy) text-white rounded-xl font-bold text-sm hover:bg-(--navy-light) transition-all shadow-lg shadow-(--navy)/10"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+            </svg>
             بحث
           </button>
         </form>

@@ -3,9 +3,19 @@
 import { useState } from "react";
 
 /**
- * نموذج التواصل — نموذج اتصال مع التحقق من صحة البيانات
- * يعرض رسائل خطأ ورسالة نجاح عند الإرسال
+ * نموذج التواصل — نموذج اتصال رسمي مع تصنيف الموضوعات
+ * يتضمن قائمة منسدلة للموضوع وإشعار خصوصية
  */
+
+const subjectOptions = [
+  { value: "", label: "اختر الموضوع *" },
+  { value: "استفسار برلماني", label: "استفسار برلماني" },
+  { value: "تقديم شكوى", label: "تقديم شكوى" },
+  { value: "اقتراح تشريعي", label: "اقتراح تشريعي" },
+  { value: "طلب لقاء", label: "طلب لقاء" },
+  { value: "أخرى", label: "أخرى" },
+];
+
 export default function ContactForm() {
   const [formData, setFormData] = useState({
     name: "",
@@ -36,7 +46,7 @@ export default function ContactForm() {
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
       newErrors.email = "يرجى إدخال بريد إلكتروني صحيح.";
     }
-    if (!formData.subject.trim()) newErrors.subject = "الموضوع مطلوب.";
+    if (!formData.subject) newErrors.subject = "الموضوع مطلوب.";
     if (!formData.message.trim()) {
       newErrors.message = "الرسالة مطلوبة.";
     } else if (formData.message.trim().length < 10) {
@@ -60,7 +70,6 @@ export default function ContactForm() {
         });
         const data = await res.json();
         if (!res.ok) {
-          // map validation errors from server if present
           if (data?.errors) {
             setErrors(data.errors);
           } else if (data?.error) {
@@ -85,7 +94,8 @@ export default function ContactForm() {
 
   /** أنماط الحقول */
   const inputBase =
-    "w-full px-4 py-3 rounded-xl bg-white border border-gray-200 text-[var(--navy)] placeholder-gray-400 text-sm transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[var(--gold)]/40 focus:border-[var(--gold)]";
+    "w-full px-4 py-3 rounded-lg bg-[var(--gray-50)] border border-[var(--gray-200)] text-[var(--navy)] placeholder-[var(--gray-400)] text-sm transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[var(--gold)]/30 focus:border-[var(--gold)] focus:bg-white";
+  const errorInput = "border-[var(--error)] ring-1 ring-[var(--error)]/20";
 
   return (
     <form
@@ -94,17 +104,30 @@ export default function ContactForm() {
       className="space-y-5"
       aria-label="نموذج التواصل"
     >
+      {/* رسالة الخطأ العامة */}
+      {errors.form && (
+        <div className="flex items-start gap-3 p-4 rounded-lg bg-[var(--error-light)] border border-[var(--error)]/20 text-[var(--error)] text-sm" role="alert">
+          <svg className="w-5 h-5 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
+          </svg>
+          {errors.form}
+        </div>
+      )}
+
       {/* رسالة النجاح */}
       {submitted && (
-        <div className="p-4 rounded-xl bg-green-50 border border-green-200 text-green-800 text-sm font-medium animate-fade-in" role="alert">
-          ✅ تم إرسال رسالتك بنجاح! سنتواصل معك قريباً.
+        <div className="flex items-start gap-3 p-4 rounded-lg bg-[var(--success-light)] border border-[var(--success)]/20 text-[var(--success)] text-sm animate-fade-in" role="alert">
+          <svg className="w-5 h-5 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          تم إرسال رسالتك بنجاح! سنتواصل معك قريباً.
         </div>
       )}
 
       {/* الاسم */}
       <div>
         <label htmlFor="name" className="block text-sm font-medium text-[var(--navy)] mb-1.5">
-          الاسم الكامل <span className="text-red-500">*</span>
+          الاسم الكامل <span className="text-[var(--error)]">*</span>
         </label>
         <input
           type="text"
@@ -113,18 +136,26 @@ export default function ContactForm() {
           value={formData.name}
           onChange={handleChange}
           placeholder="أدخل اسمك الكامل"
-          className={`${inputBase} ${errors.name ? "border-red-400 ring-red-200" : ""}`}
+          className={`${inputBase} ${errors.name ? errorInput : ""}`}
           aria-required="true"
           aria-invalid={!!errors.name}
+          aria-describedby={errors.name ? "name-error" : undefined}
         />
-        {errors.name && <p className="mt-1 text-xs text-red-500">{errors.name}</p>}
+        {errors.name && (
+          <p id="name-error" className="mt-1.5 flex items-center gap-1.5 text-xs text-[var(--error)]">
+            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
+            </svg>
+            {errors.name}
+          </p>
+        )}
       </div>
 
       {/* البريد الإلكتروني ورقم الهاتف */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
           <label htmlFor="email" className="block text-sm font-medium text-[var(--navy)] mb-1.5">
-            البريد الإلكتروني <span className="text-red-500">*</span>
+            البريد الإلكتروني <span className="text-[var(--error)]">*</span>
           </label>
           <input
             type="email"
@@ -133,12 +164,20 @@ export default function ContactForm() {
             value={formData.email}
             onChange={handleChange}
             placeholder="example@email.com"
-            className={`${inputBase} ${errors.email ? "border-red-400 ring-red-200" : ""}`}
+            className={`${inputBase} ${errors.email ? errorInput : ""}`}
             dir="ltr"
             aria-required="true"
             aria-invalid={!!errors.email}
+            aria-describedby={errors.email ? "email-error" : undefined}
           />
-          {errors.email && <p className="mt-1 text-xs text-red-500">{errors.email}</p>}
+          {errors.email && (
+            <p id="email-error" className="mt-1.5 flex items-center gap-1.5 text-xs text-[var(--error)]">
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
+              </svg>
+              {errors.email}
+            </p>
+          )}
         </div>
         <div>
           <label htmlFor="phone" className="block text-sm font-medium text-[var(--navy)] mb-1.5">
@@ -157,29 +196,41 @@ export default function ContactForm() {
         </div>
       </div>
 
-      {/* الموضوع */}
+      {/* الموضوع — قائمة منسدلة */}
       <div>
         <label htmlFor="subject" className="block text-sm font-medium text-[var(--navy)] mb-1.5">
-          الموضوع <span className="text-red-500">*</span>
+          نوع الطلب <span className="text-[var(--error)]">*</span>
         </label>
-        <input
-          type="text"
+        <select
           id="subject"
           name="subject"
           value={formData.subject}
           onChange={handleChange}
-          placeholder="كيف يمكننا مساعدتك؟"
-          className={`${inputBase} ${errors.subject ? "border-red-400 ring-red-200" : ""}`}
+          className={`${inputBase} cursor-pointer ${!formData.subject ? 'text-[var(--gray-400)]' : ''} ${errors.subject ? errorInput : ""}`}
           aria-required="true"
           aria-invalid={!!errors.subject}
-        />
-        {errors.subject && <p className="mt-1 text-xs text-red-500">{errors.subject}</p>}
+          aria-describedby={errors.subject ? "subject-error" : undefined}
+        >
+          {subjectOptions.map((opt) => (
+            <option key={opt.value} value={opt.value} disabled={!opt.value}>
+              {opt.label}
+            </option>
+          ))}
+        </select>
+        {errors.subject && (
+          <p id="subject-error" className="mt-1.5 flex items-center gap-1.5 text-xs text-[var(--error)]">
+            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
+            </svg>
+            {errors.subject}
+          </p>
+        )}
       </div>
 
       {/* الرسالة */}
       <div>
         <label htmlFor="message" className="block text-sm font-medium text-[var(--navy)] mb-1.5">
-          الرسالة <span className="text-red-500">*</span>
+          الرسالة <span className="text-[var(--error)]">*</span>
         </label>
         <textarea
           id="message"
@@ -188,21 +239,44 @@ export default function ContactForm() {
           onChange={handleChange}
           rows={5}
           placeholder="اكتب رسالتك هنا…"
-          className={`${inputBase} resize-none ${errors.message ? "border-red-400 ring-red-200" : ""}`}
+          className={`${inputBase} resize-none ${errors.message ? errorInput : ""}`}
           aria-required="true"
           aria-invalid={!!errors.message}
+          aria-describedby={errors.message ? "message-error" : undefined}
         />
-        {errors.message && <p className="mt-1 text-xs text-red-500">{errors.message}</p>}
+        {errors.message && (
+          <p id="message-error" className="mt-1.5 flex items-center gap-1.5 text-xs text-[var(--error)]">
+            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
+            </svg>
+            {errors.message}
+          </p>
+        )}
       </div>
 
       {/* زر الإرسال */}
       <button
         type="submit"
         disabled={loading}
-        className="w-full sm:w-auto px-8 py-3.5 rounded-full bg-[var(--gold)] text-[var(--navy)] font-semibold text-sm transition-all duration-300 hover:bg-[var(--gold-light)] hover:shadow-xl hover:shadow-[var(--gold)]/20 hover:scale-[1.02] active:scale-95 disabled:opacity-60 disabled:cursor-not-allowed"
+        className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-3 rounded-lg bg-[var(--gold)] text-[var(--navy)] font-semibold text-sm transition-all duration-200 hover:bg-[var(--gold-light)] hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
       >
-        {loading ? "جارٍ الإرسال…" : "إرسال الرسالة"}
+        {loading ? (
+          <>
+            <svg className="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24" aria-hidden="true">
+              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+            </svg>
+            جارٍ الإرسال…
+          </>
+        ) : (
+          "إرسال الرسالة"
+        )}
       </button>
+
+      {/* إشعار الخصوصية */}
+      <p className="text-xs text-[var(--text-muted)] leading-relaxed">
+        بإرسال هذا النموذج، توافق على معالجة بياناتك لغرض الرد على استفسارك. لن يتم مشاركة بياناتك مع أطراف ثالثة.
+      </p>
     </form>
   );
 }

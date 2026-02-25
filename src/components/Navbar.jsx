@@ -15,8 +15,8 @@ const navLinks = [
 ];
 
 /**
- * شريط التنقل — شريط علوي ثابت بتأثير الزجاج عند التمرير
- * يتضمن قائمة هاتف متجاوبة مع حركات انزلاق سلسة
+ * شريط التنقل — شريط علوي ثابت بتصميم رسمي مؤسسي
+ * يتضمن قائمة هاتف متجاوبة مع انزلاق جانبي
  */
 export default function Navbar() {
   const pathname = usePathname();
@@ -31,7 +31,6 @@ export default function Navbar() {
       queueMicrotask(() => setIsAdmin(hasToken));
     };
     checkAdmin();
-    // Re-check periodically or on focus if needed, but for now simple check is fine
   }, [pathname]);
 
   /* الاستماع للتمرير لتبديل خلفية الزجاج */
@@ -46,7 +45,12 @@ export default function Navbar() {
     queueMicrotask(() => setMobileOpen(false));
   }, [pathname]);
 
-  // Combine regular links with admin link if authenticated
+  /* منع التمرير عند فتح القائمة */
+  useEffect(() => {
+    document.body.style.overflow = mobileOpen ? 'hidden' : '';
+    return () => { document.body.style.overflow = ''; };
+  }, [mobileOpen]);
+
   const visibleLinks = [...navLinks];
   if (isAdmin) {
     visibleLinks.push({ label: "لوحة التحكم", href: "/admin" });
@@ -54,12 +58,12 @@ export default function Navbar() {
 
   return (
     <header
-      className={`fixed left-0 w-full z-50 transition-all duration-500 ${
+      className={`fixed left-0 w-full z-50 transition-all duration-400 ${
         isAdmin ? "top-[56px]" : "top-0"
       } ${
         scrolled
-          ? "glass shadow-lg py-3"
-          : "bg-transparent py-5"
+          ? "glass shadow-lg py-2.5"
+          : "bg-[var(--navy)]/80 backdrop-blur-sm py-4"
       }`}
       role="banner"
     >
@@ -67,42 +71,49 @@ export default function Navbar() {
         className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 h-full relative z-20"
         aria-label="التنقل الرئيسي"
       >
-        <div className="flex items-center justify-between md:grid md:grid-cols-3 h-full">
-          {/* ---------- الشعار (RTL: Right side) ---------- */}
+        <div className="flex items-center justify-between h-full">
+          {/* ---------- الشعار ---------- */}
           <div className="flex justify-start">
             <Link
               href="/"
-              className="flex items-center gap-2.5 group"
+              className="flex items-center gap-3 group"
               aria-label="الرئيسية"
             >
-              <div className="relative flex items-center justify-center w-11 h-11 rounded-xl bg-gradient-to-br from-(--gold) to-(--gold-dark) text-(--navy) font-bold text-xl transition-all duration-500 group-hover:rotate-6 group-hover:scale-110 shadow-lg shadow-(--gold)/20">
-                نائب
+              {/* Logo mark */}
+              <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-gradient-to-br from-[var(--gold)] to-[var(--gold-dark)] text-[var(--navy)] font-bold text-base transition-transform duration-300 group-hover:scale-105 shadow-md">
+                ن
               </div>
               <div className="hidden sm:flex flex-col">
-                <span className="text-lg font-bold text-white leading-tight tracking-tight">
-                  أحمد <span className="text-(--gold)">المصري</span>
+                <span className="text-base font-bold text-white leading-tight">
+                  أحمد <span className="text-[var(--gold)]">المصري</span>
                 </span>
-                <span className="text-[10px] text-white/50 uppercase tracking-widest font-medium">عضو مجلس النواب</span>
+                <span className="text-[10px] text-white/40 tracking-widest font-medium">
+                  عضو مجلس النواب
+                </span>
               </div>
             </Link>
           </div>
 
-          {/* ---------- روابط المركز (Desktop only) ---------- */}
-          <div className="hidden md:flex justify-center">
-            <ul className="flex items-center gap-1 bg-white/5 backdrop-blur-md rounded-full px-2 py-1.5 border border-white/10 shadow-xl overflow-hidden">
+          {/* ---------- روابط التنقل (Desktop) ---------- */}
+          <div className="hidden md:flex items-center">
+            <ul className="flex items-center gap-1">
               {visibleLinks.map((link) => {
                 const isActive = pathname === link.href || (link.href !== '/' && pathname.startsWith(link.href));
                 return (
                   <li key={link.href}>
                     <Link
                       href={link.href}
-                      className={`px-2 lg:px-4 py-2 rounded-full text-xs lg:text-sm font-semibold transition-all duration-300 relative group/item overflow-hidden ${
+                      className={`relative px-4 py-2 text-sm font-medium transition-colors duration-200 ${
                         isActive
-                          ? "text-(--navy) bg-(--gold)"
-                          : "text-white/80 hover:text-white hover:bg-white/10"
+                          ? "text-[var(--gold)]"
+                          : "text-white/70 hover:text-white"
                       }`}
                     >
-                      <span className="relative z-10">{link.label}</span>
+                      {link.label}
+                      {/* Active indicator */}
+                      {isActive && (
+                        <span className="absolute bottom-0 right-4 left-4 h-[2px] bg-[var(--gold)] rounded-full" />
+                      )}
                     </Link>
                   </li>
                 );
@@ -110,91 +121,109 @@ export default function Navbar() {
             </ul>
           </div>
 
-          {/* ---------- أزرار اليسار (Desktop: Action / Mobile: Toggle) ---------- */}
-          <div className="flex items-center justify-end gap-4">
-            {/* Desktop Action */}
-            <div className="hidden md:flex items-center gap-3">
-              {!isAdmin && !pathname.startsWith("/admin") && (
-                <Link
-                  href="/admin/login"
-                  className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-white/5 border border-white/20 text-white text-sm font-bold transition-all duration-500 hover:bg-(--gold) hover:text-(--navy) hover:border-(--gold) hover:shadow-xl hover:shadow-(--gold)/20"
-                >
-                  <span className="text-(--gold) group-hover:text-(--navy)">◆</span>
-                  ادارة
-                </Link>
-              )}
-            </div>
-
-            {/* Mobile Toggle */}
-            <button
-              onClick={() => setMobileOpen(!mobileOpen)}
-              className="md:hidden relative w-10 h-10 flex flex-col items-center justify-center group focus:outline-none"
-              aria-label={mobileOpen ? "إغلاق القائمة" : "فتح القائمة"}
-              aria-expanded={mobileOpen}
-            >
-              <div className="flex flex-col items-center justify-center gap-1.5 w-6">
-                <span
-                  className={`block h-0.5 bg-white transition-all duration-500 ease-in-out ${
-                    mobileOpen ? "w-6 rotate-45 translate-y-2" : "w-6 group-hover:w-4"
-                  }`}
-                />
-                <span
-                  className={`block h-0.5 bg-white transition-all duration-300 ease-in-out ${
-                    mobileOpen ? "opacity-0" : "w-6"
-                  }`}
-                />
-                <span
-                  className={`block h-0.5 bg-white transition-all duration-500 ease-in-out ${
-                    mobileOpen ? "w-6 -rotate-45 -translate-y-2" : "w-6 group-hover:w-5"
-                  }`}
-                />
-              </div>
-            </button>
-          </div>
-        </div>
-      </nav>
-
-      {/* ---------- قائمة الهاتف ---------- */}
-      <div
-        className={`md:hidden fixed inset-0 bg-(--navy-dark)/95 backdrop-blur-md transition-all duration-500 z-10 ${
-          mobileOpen
-            ? "opacity-100 pointer-events-auto"
-            : "opacity-0 pointer-events-none"
-        }`}
-        style={{ top: isAdmin ? '56px' : '0' }}
-      >
-        <div className="flex flex-col items-center justify-center h-full gap-8">
-          {visibleLinks.map((link, idx) => {
-            const isActive = pathname === link.href || (link.href !== '/' && pathname.startsWith(link.href));
-            return (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={`text-2xl font-semibold tracking-wide transition-all duration-300 ${
-                  isActive ? "text-(--gold)" : "text-white/80 hover:text-(--gold)"
-                }`}
-                style={{ animationDelay: `${idx * 0.08}s` }}
-              >
-                {link.label}
-              </Link>
-            );
-          })}
-          <div className="flex flex-col gap-4 mt-4 w-full px-8">
+          {/* ---------- CTA Button (Desktop) ---------- */}
+          <div className="hidden md:flex items-center">
             <Link
               href="/contact"
-              className="w-full text-center px-8 py-3 rounded-full bg-(--gold) text-(--navy) font-semibold text-lg transition-all duration-300 hover:bg-(--gold-light)"
+              className="inline-flex items-center gap-2 px-5 py-2 rounded-lg bg-[var(--gold)] text-[var(--navy)] text-sm font-semibold transition-all duration-200 hover:bg-[var(--gold-light)] hover:shadow-md"
             >
               تواصل معنا
             </Link>
-            {!isAdmin && !pathname.startsWith("/admin") && (
-              <Link
-                href="/admin/login"
-                className="w-full text-center px-8 py-3 rounded-full border-2 border-(--gold) text-(--gold) font-semibold text-lg transition-all duration-300 hover:bg-(--gold) hover:text-(--navy)"
-              >
-                ◆ ادارة
-              </Link>
-            )}
           </div>
+
+          {/* ---------- Mobile Toggle ---------- */}
+          <button
+            onClick={() => setMobileOpen(!mobileOpen)}
+            className="md:hidden relative w-10 h-10 flex flex-col items-center justify-center focus:outline-none"
+            aria-label={mobileOpen ? "إغلاق القائمة" : "فتح القائمة"}
+            aria-expanded={mobileOpen}
+          >
+            <div className="flex flex-col items-center justify-center gap-1.5 w-5">
+              <span
+                className={`block h-[2px] bg-white rounded-full transition-all duration-300 ${
+                  mobileOpen ? "w-5 rotate-45 translate-y-[5.5px]" : "w-5"
+                }`}
+              />
+              <span
+                className={`block h-[2px] bg-white rounded-full transition-all duration-200 ${
+                  mobileOpen ? "opacity-0 w-0" : "w-5"
+                }`}
+              />
+              <span
+                className={`block h-[2px] bg-white rounded-full transition-all duration-300 ${
+                  mobileOpen ? "w-5 -rotate-45 -translate-y-[5.5px]" : "w-5"
+                }`}
+              />
+            </div>
+          </button>
+        </div>
+      </nav>
+
+      {/* ---------- Mobile Menu Overlay ---------- */}
+      <div
+        className={`md:hidden fixed inset-0 bg-black/40 transition-opacity duration-300 z-10 ${
+          mobileOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+        }`}
+        style={{ top: isAdmin ? '56px' : '0' }}
+        onClick={() => setMobileOpen(false)}
+        aria-hidden="true"
+      />
+
+      {/* ---------- Mobile Menu Panel ---------- */}
+      <div
+        className={`md:hidden fixed top-0 right-0 h-full w-[280px] bg-[var(--navy-dark)] shadow-2xl transition-transform duration-300 ease-out z-20 ${
+          mobileOpen ? "translate-x-0" : "translate-x-full"
+        }`}
+        style={{ top: isAdmin ? '56px' : '0' }}
+      >
+        {/* Header */}
+        <div className="flex items-center justify-between px-6 py-5 border-b border-white/10">
+          <span className="text-base font-bold text-white">القائمة</span>
+          <button
+            onClick={() => setMobileOpen(false)}
+            className="w-8 h-8 flex items-center justify-center rounded-lg text-white/50 hover:text-white hover:bg-white/10 transition-colors"
+            aria-label="إغلاق القائمة"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+
+        {/* Links */}
+        <nav className="px-4 py-6">
+          <ul className="space-y-1">
+            {visibleLinks.map((link) => {
+              const isActive = pathname === link.href || (link.href !== '/' && pathname.startsWith(link.href));
+              return (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors duration-200 ${
+                      isActive
+                        ? "text-[var(--gold)] bg-white/5"
+                        : "text-white/60 hover:text-white hover:bg-white/5"
+                    }`}
+                  >
+                    {link.label}
+                    {isActive && (
+                      <span className="mr-auto w-1.5 h-1.5 rounded-full bg-[var(--gold)]" />
+                    )}
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+        </nav>
+
+        {/* Bottom CTA */}
+        <div className="absolute bottom-0 left-0 right-0 px-6 py-6 border-t border-white/10">
+          <Link
+            href="/contact"
+            className="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-[var(--gold)] text-[var(--navy)] font-semibold text-sm transition-all duration-200 hover:bg-[var(--gold-light)]"
+          >
+            تواصل معنا
+          </Link>
         </div>
       </div>
     </header>

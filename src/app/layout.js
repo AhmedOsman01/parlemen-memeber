@@ -48,10 +48,17 @@ export default async function RootLayout({ children }) {
 
   return (
     <html lang="ar" dir="rtl" suppressHydrationWarning className={`scroll-smooth ${notoNaskh.className}`}>
+      <head>
+        <meta name="theme-color" content="#1a2744" />
+      </head>
       <body className={`antialiased min-h-screen flex flex-col ${isAdmin ? 'pt-[56px]' : ''}`}>
+        {/* Skip to main content — accessibility */}
+        <a href="#main-content" className="skip-link">
+          تخطي إلى المحتوى الرئيسي
+        </a>
         <AdminNav />
         <Navbar />
-        <main className="flex-1">{children}</main>
+        <main id="main-content" className="flex-1">{children}</main>
         <Footer />
       </body>
     </html>

@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import AdminBreadcrumb from '@/components/admin/AdminBreadcrumb';
 
 export default function AdminDashboard() {
     const cards = [
@@ -45,7 +46,9 @@ export default function AdminDashboard() {
     ];
 
     return (
-        <div className="p-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <AdminBreadcrumb items={[{ label: 'لوحة التحكم' }]} />
+
             <div className="mb-8">
                 <h1 className="text-3xl font-bold text-gray-900 mb-2">لوحة التحكم</h1>
                 <p className="text-gray-600">أهلاً بك في لوحة تحكم الموقع الرسمي للنائب أحمد المصري.</p>

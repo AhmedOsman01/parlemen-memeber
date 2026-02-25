@@ -13,23 +13,29 @@ import "swiper/css/navigation";
 import "swiper/css/effect-fade";
 
 /**
- * العرض الرئيسي — عرض شرائح Swiper بالعرض الكامل مع نصوص وأزرار
- * يستخدم تأثير التلاشي والتشغيل التلقائي والتنقل باللمس/لوحة المفاتيح
+ * العرض الرئيسي — عرض شرائح Swiper رسمي بارتفاع مقيد
+ * تصميم مؤسسي مع تدرج لوني أنيق وأزرار هادئة
  */
 export default function HeroSlider({ initialSlides }) {
   const displaySlides = initialSlides && initialSlides.length > 0 ? initialSlides : slides;
+
   return (
-    <section className="relative w-full h-screen min-h-[600px]" aria-label="عرض الصور الرئيسي">
+    <section
+      className="relative w-full"
+      style={{ height: 'min(85vh, 700px)', minHeight: '500px' }}
+      aria-label="عرض الصور الرئيسي"
+    >
       <Swiper
         modules={[Autoplay, Pagination, Navigation, EffectFade]}
         effect="fade"
-        speed={1000}
-        autoplay={{ delay: 5000, disableOnInteraction: false }}
+        speed={800}
+        autoplay={{ delay: 6000, disableOnInteraction: false }}
         pagination={{ clickable: true }}
         navigation
         loop
         dir="rtl"
         className="w-full h-full"
+        aria-live="polite"
       >
         {displaySlides.map((slide) => (
           <SwiperSlide key={slide.id}>
@@ -39,45 +45,55 @@ export default function HeroSlider({ initialSlides }) {
                 className="absolute inset-0 bg-cover bg-center"
                 style={{ backgroundImage: `url(${getDirectImageUrl(slide.image) || "https://images.unsplash.com/photo-1575517111478-7f6afd0973db?w=1920&q=80"})` }}
               >
-                <div className="absolute inset-0 bg-gradient-to-t from-(--navy-dark) via-(--navy)/60 to-(--navy)/30" />
+                {/* Gradient overlay — institutional dark feel */}
+                <div className="absolute inset-0 bg-gradient-to-t from-[var(--navy-950)] via-[var(--navy)]/70 to-[var(--navy)]/40" />
               </div>
 
               {/* محتوى الشريحة */}
-              <div className="relative z-10 flex items-center h-full">
+              <div className="relative z-10 flex items-end h-full pb-20 sm:pb-24">
                 <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full">
                   <div className="max-w-2xl">
                     {/* خط ذهبي زخرفي */}
-                    <div className="w-16 h-1 bg-(--gold) mb-6 rounded-full" />
+                    <div className="w-12 h-[3px] bg-gradient-to-l from-[var(--gold)] to-[var(--gold-dark)] mb-5 rounded-full" />
 
-                    <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight mb-6">
+                    <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white leading-tight mb-5">
                       {slide.title}
                     </h1>
-                    <p className="text-lg sm:text-xl text-white/80 mb-8 leading-relaxed">
+                    <p className="text-base sm:text-lg text-white/60 mb-8 leading-relaxed max-w-lg">
                       {slide.subtitle}
                     </p>
 
-                    {/* زر الإجراء */}
-                    {slide.cta ? (
+                    {/* أزرار الإجراء */}
+                    <div className="flex flex-wrap items-center gap-3">
+                      {slide.cta ? (
+                        <Link
+                          href={slide.cta.href}
+                          className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-[var(--gold)] text-[var(--navy)] font-semibold text-sm transition-all duration-200 hover:bg-[var(--gold-light)] hover:shadow-lg"
+                        >
+                          {slide.cta.label}
+                          <svg className="w-4 h-4 rtl:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                          </svg>
+                        </Link>
+                      ) : (
+                        <Link
+                          href="/contact"
+                          className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-[var(--gold)] text-[var(--navy)] font-semibold text-sm transition-all duration-200 hover:bg-[var(--gold-light)] hover:shadow-lg"
+                        >
+                          تواصل معنا
+                          <svg className="w-4 h-4 rtl:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                          </svg>
+                        </Link>
+                      )}
+
                       <Link
-                        href={slide.cta.href}
-                        className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full bg-(--gold) text-(--navy) font-semibold text-base transition-all duration-300 hover:bg-(--gold-light) hover:shadow-xl hover:shadow-(--gold)/30 hover:scale-105"
+                        href="/about"
+                        className="inline-flex items-center gap-2 px-6 py-3 rounded-lg border border-white/20 text-white/80 text-sm font-medium transition-all duration-200 hover:bg-white/10 hover:border-white/30"
                       >
-                        {slide.cta.label}
-                        <svg className="w-5 h-5 rtl:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                        </svg>
+                        عن النائب
                       </Link>
-                    ) : (
-                      <Link
-                        href="/contact"
-                        className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full bg-(--gold) text-(--navy) font-semibold text-base transition-all duration-300 hover:bg-(--gold-light) hover:shadow-xl hover:shadow-(--gold)/30 hover:scale-105"
-                      >
-                        تواصل معنا
-                        <svg className="w-5 h-5 rtl:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                        </svg>
-                      </Link>
-                    )}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -86,12 +102,8 @@ export default function HeroSlider({ initialSlides }) {
         ))}
       </Swiper>
 
-      {/* مؤشر التمرير */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 animate-bounce">
-        <svg className="w-6 h-6 text-(--gold)" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-        </svg>
-      </div>
+      {/* Bottom gold accent line */}
+      <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[var(--gold)] to-transparent opacity-40 z-20" />
     </section>
   );
 }
