@@ -2,6 +2,8 @@ import "./globals.css";
 import { cookies } from "next/headers";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import FloatingActions from "@/components/FloatingActions";
+import MobileBottomNav from "@/components/MobileBottomNav";
 import AdminNav from "@/components/admin/AdminNav";
 import { Noto_Kufi_Arabic, Noto_Naskh_Arabic } from 'next/font/google';
 
@@ -18,7 +20,8 @@ const notoNaskh = Noto_Naskh_Arabic({
 });
 
 /**
- * التخطيط الرئيسي — يغلف كل صفحة بشريط التنقل والتذييل والخطوط وبيانات SEO
+ * التخطيط الرئيسي — يغلف كل صفحة بشريط العلم وشريط التنقل والتذييل
+ * والأزرار العائمة وشريط التنقل السفلي للموبايل
  */
 export const metadata = {
   title: {
@@ -34,6 +37,7 @@ export const metadata = {
     "مصر",
     "سياسة",
     "تشريعات",
+    "خدمات المواطنين",
   ],
   openGraph: {
     type: "website",
@@ -51,15 +55,27 @@ export default async function RootLayout({ children }) {
       <head>
         <meta name="theme-color" content="#1a2744" />
       </head>
-      <body className={`antialiased min-h-screen flex flex-col ${isAdmin ? 'pt-[56px]' : ''}`}>
+      <body className={`antialiased min-h-screen flex flex-col ${isAdmin ? 'pt-[59px]' : 'pt-[3px]'}`}>
+        {/* Egyptian Flag Stripe — أعلى الموقع */}
+        <div className="egypt-flag-stripe" aria-hidden="true" />
+
         {/* Skip to main content — accessibility */}
         <a href="#main-content" className="skip-link">
           تخطي إلى المحتوى الرئيسي
         </a>
+
         <AdminNav />
         <Navbar />
+
         <main id="main-content" className="flex-1">{children}</main>
+
         <Footer />
+
+        {/* Floating Action Buttons */}
+        <FloatingActions />
+
+        {/* Mobile Bottom Navigation */}
+        <MobileBottomNav />
       </body>
     </html>
   );
