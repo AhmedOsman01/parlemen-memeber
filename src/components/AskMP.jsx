@@ -37,7 +37,7 @@ export default function AskMP() {
             <span className="inline-block px-4 py-1.5 bg-[var(--gold)]/15 text-[var(--gold)] text-xs font-semibold tracking-wider rounded-full mb-5">
               صوتك مسموع
             </span>
-            <h2 className="text-3xl sm:text-4xl font-bold text-white mb-5 leading-tight">
+            <h2 className="text-3xl sm:text-4xl font-bold text-white mb-5 leading-[1.6]">
               اسأل <span className="text-gradient-gold">النائب</span> مباشرة
             </h2>
             <p className="text-white/50 leading-relaxed mb-6">

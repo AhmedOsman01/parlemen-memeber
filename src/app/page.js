@@ -62,7 +62,7 @@ export default async function HomePage() {
               <span className="inline-block px-4 py-1.5 bg-[var(--gold)]/10 text-[var(--gold-dark)] text-xs font-semibold tracking-wider rounded-md mb-5">
                 عن عضو مجلس النواب
               </span>
-              <h2 className="text-3xl sm:text-4xl font-bold text-[var(--navy)] mb-6 leading-tight gold-underline-right">
+              <h2 className="text-3xl sm:text-4xl font-bold text-[var(--navy)] mb-6 leading-[1.6] gold-underline-right">
                 خدمة مصر بإخلاص ورؤية ثاقبة
               </h2>
               <p className="text-[var(--text-secondary)] leading-relaxed mb-4">

@@ -67,6 +67,7 @@ export default function Navbar() {
     >
       <nav
         className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 h-full relative z-20"
+        style={{ fontFamily: '"Noto Kufi Arabic", ui-sans-serif, system-ui, sans-serif' }}
         aria-label="التنقل الرئيسي"
       >
         <div className="flex items-center justify-between h-full">

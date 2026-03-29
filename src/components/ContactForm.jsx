@@ -103,6 +103,7 @@ export default function ContactForm() {
       noValidate
       className="space-y-5"
       aria-label="نموذج التواصل"
+      style={{ fontFamily: '"Noto Kufi Arabic", ui-sans-serif, system-ui, sans-serif' }}
     >
       {/* رسالة الخطأ العامة */}
       {errors.form && (

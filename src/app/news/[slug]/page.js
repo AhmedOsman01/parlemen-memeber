@@ -58,7 +58,13 @@ export default async function NewsArticlePage({ params }) {
       <section className="relative pt-24 pb-0">
         <div className="aspect-[21/9] max-h-[440px] w-full overflow-hidden relative">
           <Image src={getDirectImageUrl(article.image)} alt={article.title} fill className="w-full h-full object-cover" sizes="100vw" />
-          <div className="absolute inset-0 bg-gradient-to-t from-[var(--cream-light)] via-transparent to-[var(--navy)]/30" />
+          
+          {/* Gradients */}
+          <div className="absolute inset-0 bg-gradient-to-t from-[var(--cream-light)] via-[var(--navy)]/20 to-[var(--navy)]/60" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/30 to-transparent" />
+
+          {/* Pattern Overlay */}
+          <div className="absolute inset-0 pattern-islamic opacity-20 mix-blend-overlay" />
         </div>
       </section>
 
@@ -109,7 +115,7 @@ export default async function NewsArticlePage({ params }) {
           </div>
 
           {/* العنوان */}
-          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-[var(--navy)] mb-8 leading-tight">
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-[var(--navy)] mb-8 leading-[1.6]">
             {article.title}
           </h1>
 

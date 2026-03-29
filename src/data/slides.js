@@ -5,7 +5,7 @@
 export const slides = [
   {
     id: 1,
-    image: "https://images.unsplash.com/photo-1575517111478-7f6afd0973db?w=1920&q=80",
+    image: "https://upload.wikimedia.org/wikipedia/commons/e/ec/Magles_El_Nowaab.jpg",
     title: "خدمة مصر بشرف وأمانة",
     subtitle:
       "ملتزمون ببناء مستقبل أقوى وأكثر ازدهاراً لكل مواطن مصري.",
@@ -13,7 +13,7 @@ export const slides = [
   },
   {
     id: 2,
-    image: "https://images.unsplash.com/photo-1577717903315-1691ae25ab3f?w=1920&q=80",
+    image: "https://upload.wikimedia.org/wikipedia/commons/a/ae/The_Egyptian_parliament_building_during_9_February_%28Closed%29.jpg",
     title: "التميز التشريعي",
     subtitle:
       "نتبنى تشريعات تحويلية تدفع عجلة التقدم الوطني والإصلاح.",
@@ -21,7 +21,7 @@ export const slides = [
   },
   {
     id: 3,
-    image: "https://images.unsplash.com/photo-1529107386315-e1a2ed48a620?w=1920&q=80",
+    image: "https://images.unsplash.com/photo-1539650116574-8efeb43e2750?q=80&w=1920",
     title: "المجتمع أولاً",
     subtitle:
       "التواصل مع المجتمعات في جميع أنحاء الدائرة للاستماع والعمل وتحقيق التغيير الحقيقي.",

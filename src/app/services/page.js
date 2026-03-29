@@ -113,6 +113,7 @@ export default function ServicesPage() {
                 <Link
                   href="/contact"
                   className={`inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-l ${service.color} text-white text-sm font-semibold transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5`}
+                  style={{ fontFamily: '"Noto Kufi Arabic", ui-sans-serif, system-ui, sans-serif' }}
                 >
                   {service.title}
                   <svg className="w-4 h-4 rtl:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>

@@ -1,7 +1,7 @@
 "use client";
 
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Autoplay, Pagination, Navigation, EffectFade } from "swiper/modules";
+import { Autoplay, Pagination, Navigation } from "swiper/modules";
 import Link from "next/link";
 import { slides } from "@/data/slides";
 import { getDirectImageUrl } from "@/lib/imageUtils";
@@ -10,7 +10,6 @@ import { getDirectImageUrl } from "@/lib/imageUtils";
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
-import "swiper/css/effect-fade";
 
 /**
  * العرض الرئيسي — عرض شرائح Swiper رسمي بارتفاع مقيد
@@ -26,8 +25,7 @@ export default function HeroSlider({ initialSlides }) {
       aria-label="عرض الصور الرئيسي"
     >
       <Swiper
-        modules={[Autoplay, Pagination, Navigation, EffectFade]}
-        effect="fade"
+        modules={[Autoplay, Pagination, Navigation]}
         speed={800}
         autoplay={{ delay: 6000, disableOnInteraction: false }}
         pagination={{ clickable: true }}
@@ -56,10 +54,10 @@ export default function HeroSlider({ initialSlides }) {
                     {/* خط ذهبي زخرفي */}
                     <div className="w-12 h-[3px] bg-gradient-to-l from-[var(--gold)] to-[var(--gold-dark)] mb-5 rounded-full" />
 
-                    <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white leading-tight mb-5">
+                    <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white leading-[1.6] mb-5 pt-2">
                       {slide.title}
                     </h1>
-                    <p className="text-base sm:text-lg text-white/60 mb-8 leading-relaxed max-w-lg">
+                    <p className="text-base sm:text-lg text-white/90 mb-8 leading-relaxed max-w-lg font-medium">
                       {slide.subtitle}
                     </p>
 
@@ -88,10 +86,10 @@ export default function HeroSlider({ initialSlides }) {
                       )}
 
                       <Link
-                        href="/about"
+                        href="/services"
                         className="inline-flex items-center gap-2 px-6 py-3 rounded-lg border border-white/20 text-white/80 text-sm font-medium transition-all duration-200 hover:bg-white/10 hover:border-white/30"
                       >
-                        عن النائب
+                        خدمات المواطنين
                       </Link>
                     </div>
                   </div>
