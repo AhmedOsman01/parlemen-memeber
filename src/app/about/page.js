@@ -19,8 +19,13 @@ export const metadata = {
  * صفحة عن النائب — السيرة الذاتية، الإنجازات، اللجان، المسيرة المهنية، والرؤية والرسالة
  */
 export default async function AboutPage() {
-  const dbTimeline = await listTimelineItems();
-  const timelineData = dbTimeline.length > 0 ? dbTimeline : staticTimeline;
+  let timelineData = staticTimeline;
+  try {
+    const dbTimeline = await listTimelineItems();
+    if (dbTimeline.length > 0) timelineData = dbTimeline;
+  } catch (err) {
+    console.warn("MongoDB timeline unavailable, using static data:", err.message);
+  }
 
   return (
     <>

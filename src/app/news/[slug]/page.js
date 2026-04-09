@@ -9,8 +9,14 @@ import { getNewsBySlug, listNews } from "@/models/newsModel";
  * توليد المعلمات الثابتة لجميع المقالات (SSG)
  */
 export async function generateStaticParams() {
-  const { rows } = await listNews({ limit: 100 });
-  const allSlugs = [...staticNews, ...rows].map((a) => ({ slug: a.slug }));
+  let dbRows = [];
+  try {
+    const { rows } = await listNews({ limit: 100 });
+    dbRows = rows;
+  } catch (err) {
+    console.warn("MongoDB unavailable in generateStaticParams:", err.message);
+  }
+  const allSlugs = [...staticNews, ...dbRows].map((a) => ({ slug: a.slug }));
   return allSlugs;
 }
 
@@ -19,7 +25,12 @@ export async function generateStaticParams() {
  */
 export async function generateMetadata({ params }) {
   const { slug } = await params;
-  const dbArticle = await getNewsBySlug(slug);
+  let dbArticle = null;
+  try {
+    dbArticle = await getNewsBySlug(slug);
+  } catch (err) {
+    // fallback to static
+  }
   const article = dbArticle || staticNews.find((a) => a.slug === slug);
   if (!article) return { title: "المقال غير موجود" };
   return {
@@ -34,7 +45,12 @@ export async function generateMetadata({ params }) {
  */
 export default async function NewsArticlePage({ params }) {
   const { slug } = await params;
-  const dbArticle = await getNewsBySlug(slug);
+  let dbArticle = null;
+  try {
+    dbArticle = await getNewsBySlug(slug);
+  } catch (err) {
+    // fallback to static
+  }
   const article = dbArticle || staticNews.find((a) => a.slug === slug);
 
   if (!article) {

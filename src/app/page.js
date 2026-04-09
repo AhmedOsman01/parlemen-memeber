@@ -19,10 +19,22 @@ import { listNews } from "@/models/newsModel";
  * الأنشطة البرلمانية، مشاكل تم حلها، شهادات المواطنين، اسأل النائب، آخر الأخبار
  */
 export default async function HomePage() {
-  const slidesData = JSON.parse(JSON.stringify(await listSlides()));
-  const { rows: dbNews } = await listNews({ limit: 3 });
+  let slidesData = [];
+  let latestNews = staticNews.slice(0, 3);
 
-  const latestNews = dbNews.length > 0 ? dbNews : staticNews.slice(0, 3);
+  try {
+    slidesData = JSON.parse(JSON.stringify(await listSlides()));
+  } catch (err) {
+    console.warn("MongoDB slides unavailable, using static data:", err.message);
+  }
+
+  try {
+    const { rows: dbNews } = await listNews({ limit: 3 });
+    if (dbNews.length > 0) latestNews = dbNews;
+  } catch (err) {
+    console.warn("MongoDB news unavailable, using static data:", err.message);
+  }
+
   const serializedNews = JSON.parse(JSON.stringify(latestNews));
 
   return (

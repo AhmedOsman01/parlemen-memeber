@@ -4,24 +4,43 @@ import { useState } from "react";
 
 /**
  * اسأل النائب — نموذج سريع لطرح سؤال مباشر على النائب
+ * مربوط بـ POST /api/ask-mp — يعرض رقم مرجعي بعد الإرسال
  */
 export default function AskMP() {
-  const [formData, setFormData] = useState({ name: "", question: "" });
+  const [formData, setFormData] = useState({ name: "", email: "", question: "" });
   const [submitted, setSubmitted] = useState(false);
+  const [refNumber, setRefNumber] = useState("");
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.name.trim() || !formData.question.trim()) return;
 
     setLoading(true);
-    // Simulate submission
-    setTimeout(() => {
+    setError("");
+
+    try {
+      const res = await fetch("/api/ask-mp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+      const data = await res.json();
+
+      if (!res.ok) {
+        setError(data.errors?.question || data.errors?.name || data.error || "حدث خطأ أثناء الإرسال");
+        return;
+      }
+
+      setRefNumber(data.refNumber || "");
       setSubmitted(true);
+      setFormData({ name: "", email: "", question: "" });
+    } catch (err) {
+      setError("حدث خطأ في الاتصال. حاول مرة أخرى.");
+    } finally {
       setLoading(false);
-      setFormData({ name: "", question: "" });
-      setTimeout(() => setSubmitted(false), 5000);
-    }, 800);
+    }
   };
 
   return (
@@ -64,14 +83,32 @@ export default function AskMP() {
                   <svg className="w-8 h-8 text-[var(--success)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
                 </div>
                 <h3 className="text-lg font-bold text-white mb-2">تم إرسال سؤالك!</h3>
-                <p className="text-white/50 text-sm">سنتواصل معك قريباً بالرد.</p>
+                <p className="text-white/50 text-sm mb-4">سنتواصل معك قريباً بالرد.</p>
+                {refNumber && (
+                  <div className="bg-white/10 rounded-xl p-4 border border-white/10">
+                    <p className="text-xs text-white/40 mb-1">الرقم المرجعي</p>
+                    <p className="text-lg font-bold text-[var(--gold)] tracking-widest" dir="ltr">{refNumber}</p>
+                    <p className="text-xs text-white/30 mt-1">احتفظ بهذا الرقم لمتابعة سؤالك</p>
+                  </div>
+                )}
+                <button
+                  onClick={() => { setSubmitted(false); setRefNumber(""); }}
+                  className="mt-4 text-sm text-[var(--gold)] hover:underline"
+                >
+                  إرسال سؤال آخر
+                </button>
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-4">
+                {error && (
+                  <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-300 text-xs">
+                    {error}
+                  </div>
+                )}
                 <div>
                   <input
                     type="text"
-                    placeholder="اسمك الكريم"
+                    placeholder="اسمك الكريم *"
                     value={formData.name}
                     onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
                     className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/10 text-white placeholder-white/30 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--gold)]/30 focus:border-[var(--gold)]/50 transition-all"
@@ -79,8 +116,18 @@ export default function AskMP() {
                   />
                 </div>
                 <div>
+                  <input
+                    type="email"
+                    placeholder="بريدك الإلكتروني (اختياري)"
+                    value={formData.email}
+                    onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
+                    className="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/10 text-white placeholder-white/30 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--gold)]/30 focus:border-[var(--gold)]/50 transition-all"
+                    dir="ltr"
+                  />
+                </div>
+                <div>
                   <textarea
-                    placeholder="اكتب سؤالك هنا..."
+                    placeholder="اكتب سؤالك هنا... *"
                     value={formData.question}
                     onChange={(e) => setFormData(prev => ({ ...prev, question: e.target.value }))}
                     rows={4}

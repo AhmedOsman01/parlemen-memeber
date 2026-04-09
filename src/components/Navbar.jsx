@@ -10,6 +10,8 @@ import { usePathname } from "next/navigation";
 const navLinks = [
   { label: "الرئيسية", href: "/" },
   { label: "خدمات المواطنين", href: "/services" },
+  { label: "الإنجازات", href: "/achievements" },
+  { label: "في البرلمان", href: "/parliament" },
   { label: "الأخبار", href: "/news" },
   { label: "عن النائب", href: "/about" },
   { label: "تواصل معنا", href: "/contact" },

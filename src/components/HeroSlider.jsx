@@ -100,6 +100,12 @@ export default function HeroSlider({ initialSlides }) {
         ))}
       </Swiper>
 
+      {/* Scroll indicator */}
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-1 animate-bounce opacity-60">
+        <span className="text-[10px] text-white/50 tracking-widest font-medium">اكتشف المزيد</span>
+        <svg className="w-5 h-5 text-[var(--gold)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" /></svg>
+      </div>
+
       {/* Bottom gold accent line */}
       <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[var(--gold)] to-transparent opacity-40 z-20" />
     </section>
